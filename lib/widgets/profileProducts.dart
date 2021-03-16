@@ -16,16 +16,18 @@ class _ProfileProductsState extends State<ProfileProducts> {
     print("LocalDB profile items in profileProducts: ${LocalDB.profile["items"][0].name}");
     return Container(
         child: ListView.builder(
-          itemCount: 3,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: LocalDB.profile["items"].length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               title: Column(
                 children: <Widget>[
-                  // ProfileProduct(
-                  //     //image: Image(image: NetworkImage(LocalDB.profile["items"][index].imageUrl)),
-                  //     name: LocalDB.profile == null ? "" : LocalDB.profile["items"][0].name,
-                  //   price: LocalDB.profile == null ? "" : LocalDB.profile["items"][0].price,
-                  // ),
+                  ProfileProduct(
+                      image: Image(image: NetworkImage(LocalDB.profile["items"][index].imageUrl)),
+                      name: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].name,
+                    price: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].price.toString(),
+                  ),
 
                   Divider(
                     color: Theme
@@ -43,13 +45,13 @@ class _ProfileProductsState extends State<ProfileProducts> {
 class ProfileProduct extends StatefulWidget {
   final String name;
   final String price;
-  //final Image image;
+  final Image image;
 
   const ProfileProduct({
     Key key,
     @required this.name,
     @required this.price,
-    //@required this.image,
+    @required this.image,
   }) : super(key: key);
 
   @override
@@ -61,10 +63,14 @@ class _ProfileProductState extends State<ProfileProduct> {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        // Padding(
-        //   padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
-        //   child: image,
-        // ),
+        Container(
+          width: 75,
+          height: 75,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
+            child: widget.image,
+          ),
+        ),
         Text(widget.name, style: TextStyle(fontSize: 15)),
         Text(widget.price, style: TextStyle(fontSize: 15)),
       ],

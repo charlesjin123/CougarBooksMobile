@@ -194,7 +194,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       )),
                 ],
               ),
-              Expanded(child: ProfileProducts()),
+              ProfileProducts()
             ],
           ),
         ),
