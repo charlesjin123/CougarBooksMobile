@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "940914600902",
+    "firebase_url": "https://bookplatform-919b0-default-rtdb.firebaseio.com",
+    "project_id": "bookplatform-919b0",
+    "storage_bucket": "bookplatform-919b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940914600902:android:bf5e905e8085358f5fe0c7",
+        "android_client_info": {
+          "package_name": "com.comsales.comsales_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940914600902-ndfd7nsththc262d9194h4fhg02ldo2g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKGUF7xrGvn1KMvYYpSxK-XeeFJH1TY8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940914600902-ndfd7nsththc262d9194h4fhg02ldo2g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940914600902:android:319ea05a083a8a215fe0c7",
+        "android_client_info": {
+          "package_name": "com.comsales.uitest.uitest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940914600902-ndfd7nsththc262d9194h4fhg02ldo2g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKGUF7xrGvn1KMvYYpSxK-XeeFJH1TY8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940914600902-ndfd7nsththc262d9194h4fhg02ldo2g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
