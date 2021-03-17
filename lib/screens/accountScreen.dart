@@ -192,6 +192,17 @@ class _AccountScreenState extends State<AccountScreen> {
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
                       )),
+                  IconButton(
+                      icon: Icon(
+                        Icons.add,
+                        color: Theme.of(context).accentColor,
+                      ),
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => EditItemPage()),
+                        // );
+                      })
                 ],
               ),
               ProfileProducts()

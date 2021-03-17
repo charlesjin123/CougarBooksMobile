@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
+import 'package:uitest/screens/ItemDetailScreen.dart';
 import 'package:uitest/widgets/item.dart';
 import '../data/mockData.dart';
 
@@ -13,7 +14,6 @@ class ProfileProducts extends StatefulWidget {
 class _ProfileProductsState extends State<ProfileProducts> {
   @override
   Widget build(BuildContext context) {
-    print("LocalDB profile items in profileProducts: ${LocalDB.profile["items"][0].name}");
     return Container(
         child: ListView.builder(
           shrinkWrap: true,
@@ -21,6 +21,12 @@ class _ProfileProductsState extends State<ProfileProducts> {
           itemCount: LocalDB.profile["items"].length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ItemDetailScreen(LocalDB.profile["items"][index])),
+                );
+              },
               title: Column(
                 children: <Widget>[
                   ProfileProduct(
