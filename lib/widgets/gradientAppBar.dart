@@ -8,7 +8,9 @@ import './gradientContainer.dart';
 class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String showActions;
-  const GradientAppBar({Key key, @required this.title, this.showActions = ""})
+  final HomeCallBack homeCallBack;
+
+  const GradientAppBar({Key key, @required this.title, this.showActions = "", this.homeCallBack})
       : super(key: key);
 
   List<Widget> getActions(showActions, context) {
@@ -30,9 +32,10 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
       return [
         BadgedIcon(
           iconData: Icons.filter_list,
-          onPressAction: () {
-            Navigator.of(context)
+          onPressAction: () async {
+            await Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => FilterScreen()));
+            homeCallBack();
           },
           badgeCount: 0,
           badgeTextColor: Colors.white,
@@ -95,3 +98,5 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
+
+typedef HomeCallBack = void Function();

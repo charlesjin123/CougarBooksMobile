@@ -1,11 +1,15 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:uitest/data/LocalDB.dart';
 
 import 'package:uitest/data/mockData.dart';
 import 'package:uitest/widgets/gradientAppBar.dart';
+import 'package:uitest/widgets/item.dart';
+import 'package:uitest/widgets/productBanner.dart';
 import '../widgets/headerTitle.dart';
 import '../widgets/courseBanner.dart';
 
-class StoreScreen extends StatelessWidget {
+class StoreScreen extends StatefulWidget {
   final BottomTab tab;
   const StoreScreen({
     Key key,
@@ -13,9 +17,52 @@ class StoreScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _StoreScreenState createState() => _StoreScreenState();
+}
+
+class _StoreScreenState extends State<StoreScreen> {
+  List<Item> items;
+  List<Item> newArrivals;
+
+  void initState() {
+    loadProducts();
+  }
+
+  void loadProducts() {
+    items = [];
+    newArrivals = [];
+    LocalDB.items = [];
+    FirebaseDatabase.instance.reference().child("users").once()
+        .then((datasnapshot) {
+      datasnapshot.value.forEach((k, v) {
+        if (v["products"] != null) {
+          v["products"].forEach((k1,v1) {
+            var map = Map<String, dynamic>.from(v1);
+            //var user = User(v["uid"], v["username"], v["email"]);
+            items.add(Item(map["id"], map["name"], map["price"].toDouble(), map["details"], map["imageURL"], map["uid"], map["timestamp"], map["category"]));
+          });
+        }
+      });
+      items.forEach((value) {
+        if (value.timestamp != null) {
+          LocalDB.items.add(value);
+          newArrivals.add(value);
+        }
+      });
+      newArrivals.sort((a, b) {
+        return b.timestamp - a.timestamp;
+      });
+      setState(() {});
+    }).catchError((error) {
+      print("Failed to load data. ");
+      print(error);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GradientAppBar(title: tab.title, showActions: "search"),
+        appBar: GradientAppBar(title: widget.tab.title, showActions: "search", homeCallBack: () {} ),
         body: SingleChildScrollView(
           child: Container(
               margin: EdgeInsets.all(10),
@@ -30,15 +77,14 @@ class StoreScreen extends StatelessWidget {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        courses.shuffle();
-                        var tmpCourse = courses[index];
+                        var tmpProduct = newArrivals[index];
                         return Container(
                             padding: EdgeInsets.only(left: 5, right: 5),
-                            child: CourseBanner(
-                              course: tmpCourse,
+                            child: ProductBanner(
+                              item: tmpProduct,
                             ));
                       },
-                      itemCount: courses.length,
+                      itemCount: newArrivals.length,
                     ),
                   ),
                   //SizedBox(height: 125),
@@ -49,14 +95,14 @@ class StoreScreen extends StatelessWidget {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        var tmpCourse = courses.skip(4).toList()[index];
+                        var tmpProduct = items[index];
                         return Container(
                             padding: EdgeInsets.only(left: 5, right: 5),
-                            child: CourseBanner(
-                              course: tmpCourse,
+                            child: ProductBanner(
+                              item: tmpProduct,
                             ));
                       },
-                      itemCount: courses.skip(4).toList().length,
+                      itemCount: items.length,
                     ),
                   ),
                   HeaderTitle(text: 'Top Picks'),
@@ -66,15 +112,14 @@ class StoreScreen extends StatelessWidget {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        courses.shuffle();
-                        var tmpCourse = courses.skip(2).toList()[index];
+                        var tmpProduct = items[index];
                         return Container(
                             padding: EdgeInsets.only(left: 5, right: 5),
-                            child: CourseBanner(
-                              course: tmpCourse,
+                            child: ProductBanner(
+                              item: tmpProduct,
                             ));
                       },
-                      itemCount: courses.skip(2).toList().length,
+                      itemCount: items.length,
                     ),
                   ),
                 ],

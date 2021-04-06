@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
+import 'package:uitest/screens/editItemScreen.dart';
 import 'package:uitest/widgets/item.dart';
 import 'package:uitest/widgets/profileProducts.dart';
 
@@ -107,6 +108,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   void initState() {
+    print("refreshing account screen.");
     Map<String, dynamic> profile = {};
     // FirebaseDatabase.instance.reference().child("users/" + AuthManager.getuid()).once()
     FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).once()
@@ -116,7 +118,7 @@ class _AccountScreenState extends State<AccountScreen> {
       profile["items"] = new List<Item>();
       if (datasnapshot.value["products"] != null) {
         datasnapshot.value["products"].forEach((k, v) {
-          profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], LocalDB.uid));
+          profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], LocalDB.uid, v["timestamp"], v["category"]));
         });
       }
       LocalDB.profile = profile;
@@ -134,7 +136,7 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(title: widget.tab.title, showActions: 'logout'),
+      appBar: GradientAppBar(title: widget.tab == null ? "Profile ": widget.tab.title, showActions: 'logout'),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
@@ -197,15 +199,47 @@ class _AccountScreenState extends State<AccountScreen> {
                         Icons.add,
                         color: Theme.of(context).accentColor,
                       ),
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => EditItemPage()),
-                        // );
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditItemScreen()),
+                        );
+                        initState();
                       })
                 ],
               ),
-              ProfileProducts()
+          Container(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: LocalDB.profile["items"].length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditItemScreen(item: LocalDB.profile["items"][index])),
+                        );
+                        initState();
+                      },
+                      title: Column(
+                        children: <Widget>[
+                          ProfileProduct(
+                            image: Image(image: NetworkImage(LocalDB.profile["items"][index].imageUrl)),
+                            name: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].name,
+                            price: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].price.toString(),
+                          ),
+
+                          Divider(
+                            color: Theme
+                                .of(context)
+                                .accentColor
+                                .withOpacity(0.8),
+                          ),
+                        ],
+                      ),
+                    );
+                  })),
             ],
           ),
         ),
@@ -213,3 +247,5 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 }
+
+

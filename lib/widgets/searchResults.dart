@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uitest/data/mockData.dart';
+import 'package:uitest/screens/ItemDetailScreen.dart';
+import 'package:uitest/widgets/item.dart';
 
 class SearchResults extends StatelessWidget {
   const SearchResults({
@@ -7,7 +9,7 @@ class SearchResults extends StatelessWidget {
     @required this.searchResults,
   }) : super(key: key);
 
-  final List<Course> searchResults;
+  final List<Item> searchResults;
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +17,17 @@ class SearchResults extends StatelessWidget {
         ? ListView.builder(
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              var tmpCourse = searchResults[index];
+              var tmpItem = searchResults[index];
               return ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ItemDetailScreen(tmpItem)));
+                  },
                   contentPadding: EdgeInsets.all(2),
-                  title: Text(tmpCourse.title),
-                  subtitle: Text(tmpCourse.author),
+                  title: Text(tmpItem.name),
+                  subtitle: Text("\$" + tmpItem.price.toString()),
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(tmpCourse.image),
+                    backgroundImage: NetworkImage(tmpItem.imageUrl),
                     backgroundColor: Colors.black,
                     radius: 25,
                   ));
@@ -30,7 +36,7 @@ class SearchResults extends StatelessWidget {
             scrollDirection: Axis.vertical,
           )
         : Center(
-            child: Text('No Courses !!',
+            child: Text('No Products',
                 style: TextStyle(fontSize: 20, color: Colors.grey[500])));
   }
 }
