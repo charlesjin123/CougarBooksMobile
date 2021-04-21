@@ -33,7 +33,7 @@ class ProductBanner extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   //color: Theme.of(context).primaryColor,
                   image: DecorationImage(
-                      image: NetworkImage(item.imageUrl),
+                      image: NetworkImage(item.imageUrl == null ? "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg" : item.imageUrl),
                       fit: BoxFit.cover)),
             ),
           ),

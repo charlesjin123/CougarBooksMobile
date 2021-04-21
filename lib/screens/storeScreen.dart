@@ -54,7 +54,7 @@ class _StoreScreenState extends State<StoreScreen> {
       });
       setState(() {});
     }).catchError((error) {
-      print("Failed to load data. ");
+      print("Failed to load all products. ");
       print(error);
     });
   }

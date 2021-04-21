@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uitest/screens/editPostScreen.dart';
 import 'package:uitest/screens/filterScreen.dart';
 import 'package:uitest/screens/loginScreen.dart';
 import 'package:uitest/screens/searchScreen.dart';
@@ -35,6 +36,21 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressAction: () async {
             await Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => FilterScreen()));
+            homeCallBack();
+          },
+          badgeCount: 0,
+          badgeTextColor: Colors.white,
+        ),
+      ];
+    }
+
+    if (showActions == 'post') {
+      return [
+        BadgedIcon(
+          iconData: Icons.post_add,
+          onPressAction: () async {
+            await Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => EditPostScreen()));
             homeCallBack();
           },
           badgeCount: 0,
