@@ -7,6 +7,8 @@ import 'package:uitest/widgets/gradientAppBar.dart';
 import 'package:uitest/widgets/inputTextField.dart';
 import 'package:uitest/widgets/item.dart';
 import 'package:uitest/widgets/searchResults.dart';
+import 'dart:math';
+
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -21,7 +23,10 @@ class _SearchScreenState extends State<SearchScreen> {
   void filterProducts() {
     List<Item> res = [];
     for (Item item in searchResults) {
-      if (LocalDB.min <= item.price && item.price <= LocalDB.max) {
+      if (LocalDB.min <= item.price && item.price <= LocalDB.max &&
+          LocalDB.minDist <= getDist(LocalDB.longitude, LocalDB.latitude, item.longitude, item.latitude) &&
+          getDist(LocalDB.longitude, LocalDB.latitude, item.longitude, item.latitude) <= LocalDB.maxDist
+      ) {
         if (LocalDB.selectedCategories.isEmpty) {
           res.add(item);
           continue;
@@ -41,6 +46,24 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       searchResults = res;
     });
+  }
+
+  double getDist(double lon1, double lat1, double lon2, double lat2) {
+    lon1 = degreesToRads(lon1);
+    lat1 = degreesToRads(lat1);
+    lon2 = degreesToRads(lon2);
+    lat2 = degreesToRads(lat2);
+
+    double dlon = lon2 - lon1;
+    double dlat = lat2 - lat1;
+    double a = pow(sin(dlat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlon / 2),2);
+    double c = 2 * asin(sqrt(a));
+    double r = 3956; // in miles, 6371 for km
+    return c * r;
+  }
+
+  num degreesToRads(num deg) {
+    return (deg * pi) / 180.0;
   }
 
   @override

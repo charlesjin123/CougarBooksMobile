@@ -121,13 +121,13 @@ class _AccountScreenState extends State<AccountScreen> {
       profile["items"] = new List<Item>();
       if (datasnapshot.value["products"] != null) {
         datasnapshot.value["products"].forEach((k, v) {
-          profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], LocalDB.uid, v["timestamp"], v["category"]));
+          profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], LocalDB.uid, v["timestamp"], v["category"], v["longtitude"], v["latitude"]));
         });
       }
       profile["posts"] = new List<Post>();
       if (datasnapshot.value["posts"] != null) {
         datasnapshot.value["posts"].forEach((k, v) {
-          profile["posts"].add(Post(v["id"], v["title"], v["details"], LocalDB.uid, v["timestamp"]));
+          profile["posts"].add(Post(v["id"], v["title"], v["details"], LocalDB.uid, v["timestamp"], v["longtitude"], v["latitude"]));
         });
       }
       LocalDB.profile = profile;

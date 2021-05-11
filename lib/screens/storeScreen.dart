@@ -39,7 +39,7 @@ class _StoreScreenState extends State<StoreScreen> {
           v["products"].forEach((k1,v1) {
             var map = Map<String, dynamic>.from(v1);
             //var user = User(v["uid"], v["username"], v["email"]);
-            items.add(Item(map["id"], map["name"], map["price"].toDouble(), map["details"], map["imageURL"], map["uid"], map["timestamp"], map["category"]));
+            items.add(Item(map["id"], map["name"], map["price"].toDouble(), map["details"], map["imageURL"], map["uid"], map["timestamp"], map["category"], map["longtitude"], map["latitude"]));
           });
         }
       });

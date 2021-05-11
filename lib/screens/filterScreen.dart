@@ -9,6 +9,7 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   RangeValues _priceRange = RangeValues(LocalDB.min, LocalDB.max);
+  RangeValues _distanceRange = RangeValues(LocalDB.minDist, LocalDB.maxDist);
   List<String> _categories = [
     'Category 1',
     'Category 2',
@@ -81,6 +82,47 @@ class _FilterScreenState extends State<FilterScreen> {
                       _priceRange = newValue;
                       LocalDB.min = _priceRange.start;
                       LocalDB.max = _priceRange.end;
+                    });
+                  },
+                ),
+              ),
+              Container(
+                  padding: const EdgeInsets.only(top: 20, left: 20),
+                  alignment: Alignment.centerLeft,
+                  child: Row(children: <Widget>[
+                    Text(
+                      'Distance',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      ' ${_distanceRange.start.round()}   -   ${_distanceRange.end.round()} miles',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ])),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, left: 20),
+                child: RangeSlider(
+                  divisions: 500,
+                  min: 0,
+                  max: 5000,
+                  labels: RangeLabels('${_distanceRange.start.round()}',
+                      '${_distanceRange.end.round()} miles'),
+                  values: _distanceRange,
+                  activeColor: Theme.of(context).accentColor,
+                  inactiveColor: Colors.grey[300],
+                  onChanged: (RangeValues newValue) {
+                    setState(() {
+                      _distanceRange = newValue;
+                      LocalDB.minDist = _distanceRange.start;
+                      LocalDB.maxDist = _distanceRange.end;
                     });
                   },
                 ),

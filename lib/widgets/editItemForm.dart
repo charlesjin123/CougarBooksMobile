@@ -184,6 +184,8 @@ class _EditItemState extends State<EditItemForm> {
           "uid": LocalDB.uid,
           "timestamp": DateTime.now().millisecondsSinceEpoch,
           "category": _selectedCategories,
+          "longitude": LocalDB.longitude,
+          "latitude": LocalDB.latitude,
         }
     ).then((value1) {
       // Navigator.pushReplacement(

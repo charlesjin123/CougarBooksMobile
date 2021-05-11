@@ -103,6 +103,8 @@ class _EditPostState extends State<EditPostForm> {
           "id": path,
           "uid": LocalDB.uid,
           "timestamp": DateTime.now().millisecondsSinceEpoch,
+          "longitude": LocalDB.longitude,
+          "latitude": LocalDB.latitude,
         }
     ).then((value1) {
       Navigator.pop(context);

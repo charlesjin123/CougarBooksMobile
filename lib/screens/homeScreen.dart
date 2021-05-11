@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/accountScreen.dart';
 import 'package:uitest/screens/communityScreen.dart';
 import '../data/mockData.dart';
@@ -24,9 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
   _HomeScreenState() {
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
     geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((value) {
-      print(value.latitude);
-      print(value.longitude);
-      print("Location updated");
+      LocalDB.longitude = value.longitude;
+      LocalDB.latitude = value.latitude;
+      // print(value.latitude);
+      // print(value.longitude);
+      // print("Location updated");
     }).catchError((e) {
       print("Failed to get location");
       print(e.toString());
