@@ -23,17 +23,17 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> screenList = List<Widget>();
 
   _HomeScreenState() {
-    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-    geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((value) {
-      LocalDB.longitude = value.longitude;
-      LocalDB.latitude = value.latitude;
-      // print(value.latitude);
-      // print(value.longitude);
-      // print("Location updated");
-    }).catchError((e) {
-      print("Failed to get location");
-      print(e.toString());
-    });
+    // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+    // geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((value) {
+    //   LocalDB.longitude = value.longitude;
+    //   LocalDB.latitude = value.latitude;
+    //   // print(value.latitude);
+    //   // print(value.longitude);
+    //   // print("Location updated");
+    // }).catchError((e) {
+    //   print("Failed to get location");
+    //   print(e.toString());
+    // });
   }
 
   @override
@@ -45,11 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
             screenList.add(StoreScreen(tab: tab));
             break;
           }
-        case 'Community':
-          {
-            screenList.add(CommunityScreen(tab: tab));
-            break;
-          }
+        // case 'Community':
+        //   {
+        //     screenList.add(CommunityScreen(tab: tab));
+        //     break;
+        //   }
         case 'Profile':
           {
             screenList.add(AccountScreen(tab: tab));

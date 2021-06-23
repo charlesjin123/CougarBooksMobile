@@ -9,7 +9,7 @@ class BottomTab {
 
 const List<BottomTab> allTabs = <BottomTab>[
   BottomTab('Store', Icons.store, 'Store'),
-  BottomTab('Community', Icons.people_outline_sharp, 'Community'),
+  //BottomTab('Community', Icons.people_outline_sharp, 'Community'),
   // BottomTab('My Courses', Icons.event_note, 'Courses'),
   // BottomTab('Favourites', Icons.favorite_border, 'Favourites'),
   BottomTab('Profile', Icons.person, 'Profile'),

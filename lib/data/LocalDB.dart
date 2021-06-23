@@ -3,8 +3,8 @@ import 'package:uitest/widgets/item.dart';
 class LocalDB {
   static String uid;
   static Map<String, dynamic> profile;
-  static double longitude;
-  static double latitude;
+  static double longitude = 0;
+  static double latitude = 0;
 
   static double min = 0;
   static double max = 5000;
