@@ -233,9 +233,24 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // App state changed before we got the chance to initialize.
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
+    }
+    if (state == AppLifecycleState.inactive) {
+      _controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      if (_controller != null) {
+        // onNewCameraSelected(_controller.description);
+      }
+    }
+  }
+
+  @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -278,7 +293,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             );
 
             // Attempt to take a picture and log where it's been saved.
-            await _controller.takePicture(path);
+            await _controller.takePicture();
 
             // If the picture was taken, display it on a new screen.
             String imageURL = await Navigator.push(
@@ -318,8 +333,8 @@ class DisplayPictureScreen extends StatelessWidget {
                 onPressed: () {
                   var fileToUpload = File(imagePath);
                   var fileName = "product-" + DateTime.now().millisecondsSinceEpoch.toString() + '.png';
-                  FirebaseStorage.instance.ref().child("products/"+LocalDB.uid+"/" + fileName).putFile(fileToUpload).events.listen((event) {
-                    if (event.type == StorageTaskEventType.success) {
+                  FirebaseStorage.instance.ref().child("products/"+LocalDB.uid+"/" + fileName).putFile(fileToUpload).then((taskEvent) {
+                    if (taskEvent.state == TaskState.success) {
                       FirebaseStorage.instance.ref().child("products/"+LocalDB.uid+"/" + fileName).getDownloadURL()
                           .then((value) {
                         Navigator.pop(context, value.toString());
