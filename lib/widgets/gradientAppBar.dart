@@ -57,6 +57,16 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
           badgeCount: 0,
           badgeTextColor: Colors.white,
         ),
+        BadgedIcon(
+          iconData: Icons.post_add,
+          onPressAction: () async {
+            await Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => EditPostScreen()));
+            homeCallBack();
+          },
+          badgeCount: 0,
+          badgeTextColor: Colors.yellow,
+        ),
       ];
     }
 
