@@ -7,7 +7,7 @@ class LocalDB {
   static double latitude = 0;
 
   static double min = 0;
-  static double max = 5000;
+  static double max = 500;
   static double minDist = 0;
   static double maxDist = 5000;
   static double minPostDist = 0;

@@ -88,7 +88,7 @@ class _StoreScreenState extends State<StoreScreen> {
                     ),
                   ),
                   //SizedBox(height: 125),
-                  HeaderTitle(text: 'Trending Products'),
+                  HeaderTitle(text: 'For You'),
                   Container(
                     height: 150,
                     margin: EdgeInsets.only(top: 10),

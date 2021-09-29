@@ -42,7 +42,7 @@ class ProductBanner extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(1.0),
               child: Text(
-                "\$" + item.price.toString() + "  " + item.name,
+                "\$" + item.price.toString() + "  " + (item.name.length > 25 ? item.name.substring(0, 25)+"..." : item.name),
                 style: TextStyle(fontWeight: FontWeight.w400),
               ),
             ),

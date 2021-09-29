@@ -52,44 +52,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                       image: NetworkImage(
-                        widget.item.imageUrl,
+                        widget.item.imageUrl != null ? widget.item.imageUrl : "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
                       ),
                       fit: BoxFit.contain,
                     )),
                   ),
                   SizedBox(height: 15),
-                  Container(
-                    width: MediaQuery.of(context).size.width * .9,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: FlatButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3)),
-                            color: Theme.of(context).primaryColor,
-                            onPressed: () {},
-                            //icon: Icon(Icons.event_note, color: Colors.white),
-                            child: Text('Add to My Course',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: FlatButton(
-                            onPressed: () {},
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3)),
-                            color: Theme.of(context).primaryColor,
-                            // icon: Icon(Icons.favorite_border,
-                            //     color: Colors.white),
-                            child: Text('Add to Whislist',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   ItemHighlights(widget.item),
                   ExpandableCard(
                     title: 'Description',

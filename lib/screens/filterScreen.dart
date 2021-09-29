@@ -9,11 +9,21 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   RangeValues _priceRange = RangeValues(LocalDB.min, LocalDB.max);
-  RangeValues _distanceRange = RangeValues(LocalDB.minDist, LocalDB.maxDist);
+  //RangeValues _distanceRange = RangeValues(LocalDB.minDist, LocalDB.maxDist);
   List<String> _categories = [
-    'Category 1',
-    'Category 2',
-    'Category 3',
+    'English',
+    'History',
+    'Psychology',
+    'Economics',
+    'Computer Science',
+    'Physics',
+    'Biology',
+    'Chemistry',
+    'Math',
+    'Statistics',
+    'Geometry',
+    'Calculus',
+    'Linear Algebra',
   ];
   //List<String> _selectedCategories = [];
   //List<int> _selectedRating = [5, 3, 2];
@@ -71,7 +81,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 child: RangeSlider(
                   divisions: 500,
                   min: 0,
-                  max: 5000,
+                  max: 500,
                   labels: RangeLabels('\$ ${_priceRange.start.round()}',
                       '\$ ${_priceRange.end.round()}'),
                   values: _priceRange,
@@ -85,6 +95,45 @@ class _FilterScreenState extends State<FilterScreen> {
                     });
                   },
                 ),
+              ),
+              Container(
+                  padding: const EdgeInsets.only(top: 20, left: 20),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Category',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  )),
+              SizedBox(height: 10),
+              Wrap(
+                children: _categories
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ActionChip(
+                          label: Text(e),
+                          onPressed: () {
+                            setState(() {
+                              LocalDB.selectedCategories.contains(e)
+                                  ? LocalDB.selectedCategories.remove(e)
+                                  : LocalDB.selectedCategories.add(e);
+                            });
+                          },
+                          labelStyle: TextStyle(
+                              color: LocalDB.selectedCategories.contains(e)
+                                  ? Colors.white
+                                  : Colors.black),
+                          padding: EdgeInsets.all(8),
+                          backgroundColor: LocalDB.selectedCategories.contains(e)
+                              ? Theme.of(context).accentColor
+                              : Colors.grey[300],
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
               // Container(
               //     padding: const EdgeInsets.only(top: 20, left: 20),
@@ -127,45 +176,6 @@ class _FilterScreenState extends State<FilterScreen> {
               //     },
               //   ),
               // ),
-              Container(
-                  padding: const EdgeInsets.only(top: 20, left: 20),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Category',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                    ),
-                  )),
-              SizedBox(height: 10),
-              Wrap(
-                children: _categories
-                    .map(
-                      (e) => Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ActionChip(
-                          label: Text(e),
-                          onPressed: () {
-                            setState(() {
-                              LocalDB.selectedCategories.contains(e)
-                                  ? LocalDB.selectedCategories.remove(e)
-                                  : LocalDB.selectedCategories.add(e);
-                            });
-                          },
-                          labelStyle: TextStyle(
-                              color: LocalDB.selectedCategories.contains(e)
-                                  ? Colors.white
-                                  : Colors.black),
-                          padding: EdgeInsets.all(8),
-                          backgroundColor: LocalDB.selectedCategories.contains(e)
-                              ? Theme.of(context).accentColor
-                              : Colors.grey[300],
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
               // Container(
               //     padding: const EdgeInsets.only(top: 20, left: 20),
               //     alignment: Alignment.centerLeft,

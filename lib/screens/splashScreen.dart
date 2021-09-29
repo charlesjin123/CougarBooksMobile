@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 20,
             ),
             Center(
-                child: Text('Charles Sales',
+                child: Text('Cougar Books',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,

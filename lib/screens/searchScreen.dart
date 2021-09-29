@@ -21,11 +21,18 @@ class _SearchScreenState extends State<SearchScreen> {
   var searchController = new TextEditingController();
 
   void filterProducts() {
+    searchResults = [];
+    for (Item item in LocalDB.items) {
+      if (item.name.toLowerCase().contains(searchController.text.toLowerCase())) {
+        searchResults.add(item);
+      }
+    }
+
     List<Item> res = [];
     for (Item item in searchResults) {
-      if (LocalDB.min <= item.price && item.price <= LocalDB.max &&
-          LocalDB.minDist <= getDist(LocalDB.longitude, LocalDB.latitude, item.longitude, item.latitude) &&
-          getDist(LocalDB.longitude, LocalDB.latitude, item.longitude, item.latitude) <= LocalDB.maxDist
+      if (LocalDB.min <= item.price && item.price <= LocalDB.max
+          // && LocalDB.minDist <= getDist(LocalDB.longitude, LocalDB.latitude, item.longitude, item.latitude) &&
+          // getDist(LocalDB.longitude, LocalDB.latitude, item.longitude, item.latitude) <= LocalDB.maxDist
       ) {
         if (LocalDB.selectedCategories.isEmpty) {
           res.add(item);
@@ -48,23 +55,23 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  double getDist(double lon1, double lat1, double lon2, double lat2) {
-    lon1 = degreesToRads(lon1);
-    lat1 = degreesToRads(lat1);
-    lon2 = degreesToRads(lon2);
-    lat2 = degreesToRads(lat2);
-
-    double dlon = lon2 - lon1;
-    double dlat = lat2 - lat1;
-    double a = pow(sin(dlat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlon / 2),2);
-    double c = 2 * asin(sqrt(a));
-    double r = 3956; // in miles, 6371 for km
-    return c * r;
-  }
-
-  num degreesToRads(num deg) {
-    return (deg * pi) / 180.0;
-  }
+  // double getDist(double lon1, double lat1, double lon2, double lat2) {
+  //   lon1 = degreesToRads(lon1);
+  //   lat1 = degreesToRads(lat1);
+  //   lon2 = degreesToRads(lon2);
+  //   lat2 = degreesToRads(lat2);
+  //
+  //   double dlon = lon2 - lon1;
+  //   double dlat = lat2 - lat1;
+  //   double a = pow(sin(dlat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlon / 2),2);
+  //   double c = 2 * asin(sqrt(a));
+  //   double r = 3956; // in miles, 6371 for km
+  //   return c * r;
+  // }
+  //
+  // num degreesToRads(num deg) {
+  //   return (deg * pi) / 180.0;
+  // }
 
   @override
   Widget build(BuildContext context) {

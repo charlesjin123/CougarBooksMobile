@@ -23,27 +23,27 @@ class ItemHighlights extends StatelessWidget {
                     fontSize: 18,
                   )),
             ),
-            // ListTile(
-            //   leading: Padding(
-            //     padding: const EdgeInsets.only(left: 8.0),
-            //     child: Icon(Icons.label),
-            //   ),
-            //   contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-            //   title: Text(item.name,
-            //       style: TextStyle(
-            //         fontSize: 16,
-            //         fontWeight: FontWeight.w500,
-            //         color: Colors.grey[700],
-            //       )),
-            //   dense: true,
-            // ),
+            ListTile(
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Icon(Icons.label),
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+              title: Text(item.name,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                  )),
+              dense: true,
+            ),
             ListTile(
               leading: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Icon(Icons.money),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-              title: Text(item.price.toString(),
+              title: Text("\$" + item.price.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,

@@ -7,8 +7,8 @@ class Item {
   String uid;
   int timestamp;
   List<dynamic> category;
-  double longitude;
-  double latitude;
+  var longitude;
+  var latitude;
 
   Item(this.id, this.name, this.price, this.details, this.imageUrl, this.uid, this.timestamp, this.category, this.longitude, this.latitude);
 }

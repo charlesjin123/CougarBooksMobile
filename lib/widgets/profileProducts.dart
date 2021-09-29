@@ -81,8 +81,8 @@ class _ProfileProductState extends State<ProfileProduct> {
             child: widget.image,
           ),
         ),
-        Text(widget.name, style: TextStyle(fontSize: 15)),
-        Text(widget.price, style: TextStyle(fontSize: 15)),
+        Text(widget.name.length > 30 ? widget.name.substring(0, 30)+"..." : widget.name, style: TextStyle(fontSize: 15)),
+        //Text(widget.price, style: TextStyle(fontSize: 15)),
       ],
     );
   }

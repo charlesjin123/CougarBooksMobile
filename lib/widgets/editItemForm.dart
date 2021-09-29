@@ -34,9 +34,19 @@ class _EditItemState extends State<EditItemForm> {
   var imageURL;
 
   List<String> _categories = [
-    'Category 1',
-    'Category 2',
-    'Category 3',
+    'English',
+    'History',
+    'Psychology',
+    'Economics',
+    'Computer Science',
+    'Physics',
+    'Biology',
+    'Chemistry',
+    'Math',
+    'Statistics',
+    'Geometry',
+    'Calculus',
+    'Linear Algebra',
   ];
   List<dynamic> _selectedCategories;
 
@@ -77,11 +87,9 @@ class _EditItemState extends State<EditItemForm> {
                         MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera)),
                       );
                       imageURL = newURL != null ? newURL : imageURL;
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
-                    child: Text("Add Image", style: TextStyle(fontSize: 20)),
+                    child: Text("Edit Image", style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 InputTextField(
@@ -257,7 +265,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Take a picture')),
+      appBar: AppBar(title: Text('Camera')),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
@@ -285,21 +293,21 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             // Construct the path where the image should be saved using the
             // pattern package.
-            final path = join(
-              // Store the picture in the temp directory.
-              // Find the temp directory using the `path_provider` plugin.
-              (await getTemporaryDirectory()).path,
-              '${DateTime.now()}.png',
-            );
+            // final path = join(
+            //   // Store the picture in the temp directory.
+            //   // Find the temp directory using the `path_provider` plugin.
+            //   (await getTemporaryDirectory()).path,
+            //   '${DateTime.now()}.png',
+            // );
 
             // Attempt to take a picture and log where it's been saved.
-            await _controller.takePicture();
+            XFile picture = await _controller.takePicture();
 
             // If the picture was taken, display it on a new screen.
             String imageURL = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(imagePath: path),
+                builder: (context) => DisplayPictureScreen(imagePath: picture.path),
               ),
             );
             Navigator.pop(context, imageURL);
@@ -321,7 +329,7 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Display the Picture')),
+        appBar: AppBar(title: Text('Camera')),
         // The image is stored as a file on the device. Use the `Image.file`
         // constructor with the given path to display the image.
         body: Column(

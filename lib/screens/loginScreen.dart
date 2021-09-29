@@ -24,22 +24,24 @@ class LoginScreen extends StatelessWidget {
                             fit: BoxFit.contain,
                             alignment: Alignment.center)),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 15),
+                  Text("Welcome to Cougar Books!"),
+                  SizedBox(height: 10),
                   LoginForm(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0, bottom: 15.0),
-                    child: GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgotPasswordScreen())),
-                      child: Text('Forgot Password?',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).primaryColor)),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 2.0, bottom: 15.0),
+                  //   child: GestureDetector(
+                  //     onTap: () => Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => ForgotPasswordScreen())),
+                  //     child: Text('Forgot Password?',
+                  //         style: TextStyle(
+                  //             fontSize: 15,
+                  //             fontWeight: FontWeight.w600,
+                  //             color: Theme.of(context).primaryColor)),
+                  //   ),
+                  // ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
