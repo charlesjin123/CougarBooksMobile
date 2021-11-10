@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/accountScreen.dart';
 import 'package:uitest/screens/loginScreen.dart';
+import 'package:uitest/screens/takePictureScreen.dart';
 import 'package:uitest/widgets/inputTextField.dart';
 import 'package:uitest/widgets/item.dart';
 
@@ -84,7 +85,7 @@ class _EditItemState extends State<EditItemForm> {
                       final firstCamera = cameras.first;
                       var newURL = await Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera)),
+                        MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera, type: "product")),
                       );
                       imageURL = newURL != null ? newURL : imageURL;
                       setState(() {});
@@ -171,9 +172,47 @@ class _EditItemState extends State<EditItemForm> {
                         color: Theme.of(context).accentColor,
                         onPressed: saveItemToAccountPage,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))))
+                            borderRadius: BorderRadius.circular(5)
+                        )
+                    )
+                ),
+                widget.item != null ? Container(
+                    //margin: EdgeInsets.all(20),
+                    child: FlatButton.icon(
+                      icon: Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      label: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 20.0),
+                        child: Text(
+                          "Remove",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              letterSpacing: 1),
+                        ),
+                      ),
+                      padding: EdgeInsets.all(12),
+                      color: Theme.of(context).accentColor,
+                      onPressed: deleteItem,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)
+                      )
+                    )
+                ) : Text(""),
               ],
             )));
+  }
+
+  void deleteItem() {
+    String path = widget.item.id;
+    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/item" + path).remove().then((value1) {
+      Navigator.pop(context);
+    }).catchError((error) {
+      print("Failed to remove. " + error.toString());
+    });
   }
 
   void saveItemToAccountPage() {
@@ -208,155 +247,5 @@ class _EditItemState extends State<EditItemForm> {
 }
 
 
-class TakePictureScreen extends StatefulWidget {
-  final CameraDescription camera;
 
-  const TakePictureScreen({
-    Key key,
-    @required this.camera,
-  }) : super(key: key);
 
-  @override
-  TakePictureScreenState createState() => TakePictureScreenState();
-}
-
-class TakePictureScreenState extends State<TakePictureScreen> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
-
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // App state changed before we got the chance to initialize.
-    if (_controller == null || !_controller.value.isInitialized) {
-      return;
-    }
-    if (state == AppLifecycleState.inactive) {
-      _controller?.dispose();
-    } else if (state == AppLifecycleState.resumed) {
-      if (_controller != null) {
-        // onNewCameraSelected(_controller.description);
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Camera')),
-      // Wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner
-      // until the controller has finished initializing.
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        // Provide an onPressed callback.
-        onPressed: () async {
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
-          try {
-            // Ensure that the camera is initialized.
-            await _initializeControllerFuture;
-
-            // Construct the path where the image should be saved using the
-            // pattern package.
-            // final path = join(
-            //   // Store the picture in the temp directory.
-            //   // Find the temp directory using the `path_provider` plugin.
-            //   (await getTemporaryDirectory()).path,
-            //   '${DateTime.now()}.png',
-            // );
-
-            // Attempt to take a picture and log where it's been saved.
-            XFile picture = await _controller.takePicture();
-
-            // If the picture was taken, display it on a new screen.
-            String imageURL = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(imagePath: picture.path),
-              ),
-            );
-            Navigator.pop(context, imageURL);
-          } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
-          }
-        },
-      ),
-    );
-  }
-}
-
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-
-  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text('Camera')),
-        // The image is stored as a file on the device. Use the `Image.file`
-        // constructor with the given path to display the image.
-        body: Column(
-          children: [
-            Image.file(File(imagePath)),
-            Container(
-              width: 250,
-              child: ElevatedButton(
-                onPressed: () {
-                  var fileToUpload = File(imagePath);
-                  var fileName = "product-" + DateTime.now().millisecondsSinceEpoch.toString() + '.png';
-                  FirebaseStorage.instance.ref().child("products/"+LocalDB.uid+"/" + fileName).putFile(fileToUpload).then((taskEvent) {
-                    if (taskEvent.state == TaskState.success) {
-                      FirebaseStorage.instance.ref().child("products/"+LocalDB.uid+"/" + fileName).getDownloadURL()
-                          .then((value) {
-                        Navigator.pop(context, value.toString());
-                      }).catchError((error) {
-                        print("Failed to get the URL");
-                      });
-                    }
-                  });
-                },
-                child: Text("Upload Image", style: TextStyle(fontSize: 20)),
-              ),
-            ),
-          ],
-        )
-    );
-  }
-}

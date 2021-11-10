@@ -7,7 +7,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         //resizeToAvoidBottomPadding: false,
-        appBar: GradientAppBar(title: 'SignUp'),
+        appBar: GradientAppBar(title: 'Sign Up'),
         body: Container(
           alignment: Alignment.topCenter,
           margin: EdgeInsets.only(top: 20),

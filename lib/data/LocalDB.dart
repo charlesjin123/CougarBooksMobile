@@ -15,4 +15,6 @@ class LocalDB {
   static List<String> selectedCategories = [];
 
   static List<Item> items;
+
+  static var chatListener;
 }

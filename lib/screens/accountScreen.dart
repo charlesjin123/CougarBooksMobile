@@ -32,6 +32,7 @@ class _AccountScreenState extends State<AccountScreen> {
         .then((datasnapshot) {
       profile["username"] = datasnapshot.value["username"];
       profile["email"] =  datasnapshot.value["email"];
+      profile["imageURL"] =  datasnapshot.value["imageURL"];
       profile["items"] = new List<Item>();
       if (datasnapshot.value["products"] != null) {
         datasnapshot.value["products"].forEach((k, v) {
@@ -59,7 +60,7 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(title: widget.tab == null ? "Profile ": widget.tab.title, showActions: 'logout'),
+      appBar: GradientAppBar(title: widget.tab == null ? "Profile" : widget.tab.title, showActions: 'logout'),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
@@ -78,7 +79,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       backgroundColor: Colors.white,
                       radius: 58,
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(profile['userImage']),
+                        backgroundImage: NetworkImage(LocalDB.profile != null && LocalDB.profile["imageURL"] != null ? LocalDB.profile['imageURL'] : profile["userImage"]),
                         backgroundColor: Colors.black,
                         radius: 56,
                       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/accountScreen.dart';
 import 'package:uitest/screens/communityScreen.dart';
+import 'package:uitest/screens/messagesScreen.dart';
 import '../data/mockData.dart';
 import 'package:flutter/rendering.dart';
 import '../screens/storeScreen.dart';
@@ -45,11 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
             screenList.add(StoreScreen(tab: tab));
             break;
           }
-        // case 'Community':
-        //   {
-        //     screenList.add(CommunityScreen(tab: tab));
-        //     break;
-        //   }
+        case 'Messages':
+          {
+            screenList.add(MessagesScreen(tab: tab));
+            break;
+          }
         case 'Profile':
           {
             screenList.add(AccountScreen(tab: tab));

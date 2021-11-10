@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/editPostScreen.dart';
 import 'package:uitest/screens/filterScreen.dart';
 import 'package:uitest/screens/loginScreen.dart';
@@ -74,6 +75,7 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
       return [
         IconButton(
           onPressed: () async {
+            LocalDB.chatListener?.cancel();
             await showDialog<void>(
                 context: context,
                 barrierDismissible: false, // user must tap button!

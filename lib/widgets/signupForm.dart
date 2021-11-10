@@ -1,8 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/loginScreen.dart';
+import 'package:uitest/screens/takePictureScreen.dart';
 import 'package:uitest/widgets/inputTextField.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -16,6 +18,7 @@ class _SignUpState extends State<SignUpForm> {
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var imageURL;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,26 @@ class _SignUpState extends State<SignUpForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                Container(
+                  height: 200,
+                  child: imageURL != null ? Image.network(imageURL) : Image.network("https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg"),
+                ),
+                Container(
+                  width: 250,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final cameras = await availableCameras();
+                      final firstCamera = cameras.first;
+                      var newURL = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera, type: "profile")),
+                      );
+                      imageURL = newURL != null ? newURL : imageURL;
+                      setState(() {});
+                    },
+                    child: Text("Take Profile Picture", style: TextStyle(fontSize: 20)),
+                  ),
+                ),
                 InputTextField(
                   keyboardType: TextInputType.text,
                   prefixIcon: Icons.person,
@@ -40,29 +63,6 @@ class _SignUpState extends State<SignUpForm> {
                   },
                   controller: usernameController,
                 ),
-                // InputTextField(
-                //   keyboardType: TextInputType.datetime,
-                //   prefixIcon: Icons.cake,
-                //   hint: 'Date Of Birth',
-                //   type: 'dateTime',
-                //   validationFunction: (value) {
-                //     if (value.isEmpty) {
-                //       return 'Date is required';
-                //     }
-                //     return null;
-                //   },
-                // ),
-                // InputTextField(
-                //   keyboardType: TextInputType.phone,
-                //   prefixIcon: Icons.phone_iphone,
-                //   hint: 'Mobile',
-                //   validationFunction: (value) {
-                //     if (value.isEmpty) {
-                //       return 'Mobile Number is required';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 InputTextField(
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: Icons.email,
@@ -108,9 +108,6 @@ class _SignUpState extends State<SignUpForm> {
                         padding: EdgeInsets.all(12),
                         color: Theme.of(context).accentColor,
                         onPressed: () {
-                          print(emailController.text);
-                          print(passwordController.text);
-                          print(usernameController.text);
                           FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text)
                               .then((value) {
                             FirebaseDatabase.instance.reference().child("users/" + value.user.uid).set(
@@ -118,6 +115,7 @@ class _SignUpState extends State<SignUpForm> {
                                   "username": usernameController.text,
                                   "email": emailController.text,
                                   "uid": value.user.uid,
+                                  "imageURL": imageURL,
                                 }
                             ).then((value1) {
                               LocalDB.uid = value.user.uid;
