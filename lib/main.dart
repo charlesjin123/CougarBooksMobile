@@ -18,29 +18,42 @@ class MyApp extends StatelessWidget {
     return Color(int.parse('FF$hexCode', radix: 16));
   }
 
-  Map<int, Color> color = {
-    50: Color.fromRGBO(229, 45, 39, .1),
-    100: Color.fromRGBO(229, 45, 39, .2),
-    200: Color.fromRGBO(229, 45, 39, .3),
-    300: Color.fromRGBO(229, 45, 399, .4),
-    400: Color.fromRGBO(229, 45, 39, .5),
-    500: Color.fromRGBO(229, 45, 39, .6),
-    600: Color.fromRGBO(229, 45, 39, .7),
-    700: Color.fromRGBO(229, 45, 39, .8),
-    800: Color.fromRGBO(229, 45, 39, .9),
-    900: Color.fromRGBO(229, 45, 39, 1),
+  Map<int, Color> goldMap = {
+    50: Color.fromRGBO(197, 171, 53, .1),
+    100: Color.fromRGBO(197, 171, 53, .2),
+    200: Color.fromRGBO(197, 171, 53, .3),
+    300: Color.fromRGBO(197, 171, 53, .4),
+    400: Color.fromRGBO(197, 171, 53, .5),
+    500: Color.fromRGBO(197, 171, 53, .6),
+    600: Color.fromRGBO(197, 171, 53, .7),
+    700: Color.fromRGBO(197, 171, 53, .8),
+    800: Color.fromRGBO(197, 171, 53, .9),
+    900: Color.fromRGBO(197, 171, 53, 1),
+  };
+
+  Map<int, Color> purpleMap = {
+    50: Color.fromRGBO(34, 37, 89, .1),
+    100: Color.fromRGBO(34, 37, 89, .2),
+    200: Color.fromRGBO(34, 37, 89, .3),
+    300: Color.fromRGBO(34, 37, 89, .4),
+    400: Color.fromRGBO(34, 37, 89, .5),
+    500: Color.fromRGBO(34, 37, 89, .6),
+    600: Color.fromRGBO(34, 37, 89, .7),
+    700: Color.fromRGBO(34, 37, 89, .8),
+    800: Color.fromRGBO(34, 37, 89, .9),
+    900: Color.fromRGBO(34, 37, 89, 1),
   };
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Charles Sales',
+      title: 'Cougar Books',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: MaterialColor(0xFFE52D27, color),
-        primaryColor: _colorFromHex('#800080'),
-        accentColor: _colorFromHex('#301934'),
+        primarySwatch: MaterialColor(0xFF222559, purpleMap), // purple 0xFF222559 gold 0xFFC5AB35
+        primaryColor: _colorFromHex('#222559'), // gold #C5AB35 purple #222559
+        accentColor: _colorFromHex('#C5AB35'),
         fontFamily: 'Ubuntu',
       ),
       home: SplashScreen(),

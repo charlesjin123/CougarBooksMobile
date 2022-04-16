@@ -68,60 +68,73 @@ class _StoreScreenState extends State<StoreScreen> {
               margin: EdgeInsets.all(10),
               width: double.infinity,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   HeaderTitle(text: 'New Arrivals'),
-                  Container(
-                    height: 150,
-                    margin: EdgeInsets.only(top: 10),
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        var tmpProduct = newArrivals[index];
-                        return Container(
-                            padding: EdgeInsets.only(left: 5, right: 5),
-                            child: ProductBanner(
-                              item: tmpProduct,
-                            ));
-                      },
-                      itemCount: newArrivals.length,
-                    ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      var tmpProduct = newArrivals[index];
+                      return Container(
+                          padding: EdgeInsets.only(top: 10, left: 5, right: 5),
+                          child: ProductBanner(
+                            item: tmpProduct,
+                          ));
+                    },
+                    itemCount: newArrivals.length,
                   ),
+                  // Container(
+                  //   height: 150,
+                  //   margin: EdgeInsets.only(top: 10),
+                  //   child: ListView.builder(
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemBuilder: (context, index) {
+                  //       var tmpProduct = newArrivals[index];
+                  //       return Container(
+                  //           padding: EdgeInsets.only(left: 5, right: 5),
+                  //           child: ProductBanner(
+                  //             item: tmpProduct,
+                  //           ));
+                  //     },
+                  //     itemCount: newArrivals.length,
+                  //   ),
+                  // ),
                   //SizedBox(height: 125),
-                  HeaderTitle(text: 'For You'),
-                  Container(
-                    height: 150,
-                    margin: EdgeInsets.only(top: 10),
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        var tmpProduct = items[index];
-                        return Container(
-                            padding: EdgeInsets.only(left: 5, right: 5),
-                            child: ProductBanner(
-                              item: tmpProduct,
-                            ));
-                      },
-                      itemCount: items.length,
-                    ),
-                  ),
-                  HeaderTitle(text: 'Top Picks'),
-                  Container(
-                    height: 150,
-                    margin: EdgeInsets.only(top: 10),
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        var tmpProduct = items[index];
-                        return Container(
-                            padding: EdgeInsets.only(left: 5, right: 5),
-                            child: ProductBanner(
-                              item: tmpProduct,
-                            ));
-                      },
-                      itemCount: items.length,
-                    ),
-                  ),
+                  // HeaderTitle(text: 'For You'),
+                  // Container(
+                  //   height: 150,
+                  //   margin: EdgeInsets.only(top: 10),
+                  //   child: ListView.builder(
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemBuilder: (context, index) {
+                  //       var tmpProduct = items[index];
+                  //       return Container(
+                  //           padding: EdgeInsets.only(left: 5, right: 5),
+                  //           child: ProductBanner(
+                  //             item: tmpProduct,
+                  //           ));
+                  //     },
+                  //     itemCount: items.length,
+                  //   ),
+                  // ),
+                  // HeaderTitle(text: 'Top Picks'),
+                  // Container(
+                  //   height: 150,
+                  //   margin: EdgeInsets.only(top: 10),
+                  //   child: ListView.builder(
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemBuilder: (context, index) {
+                  //       var tmpProduct = items[index];
+                  //       return Container(
+                  //           padding: EdgeInsets.only(left: 5, right: 5),
+                  //           child: ProductBanner(
+                  //             item: tmpProduct,
+                  //           ));
+                  //     },
+                  //     itemCount: items.length,
+                  //   ),
+                  // ),
                 ],
               )),
         ));

@@ -116,10 +116,10 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
         title: Text(this.title),
-        flexibleSpace: GradientContainer(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        // flexibleSpace: GradientContainer(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        // ),
         centerTitle: true,
         leading: showActions == "post" ? BadgedIcon(
           iconData: Icons.filter_list,

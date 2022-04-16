@@ -16,16 +16,16 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    width: 75,
-                    height: 75,
+                    width: 175,
+                    height: 175,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage('assets/images/open-book.png'),
+                            image: AssetImage('assets/images/Cougar Books Logo Transparent.png'),
                             fit: BoxFit.contain,
                             alignment: Alignment.center)),
                   ),
                   SizedBox(height: 15),
-                  Text("Welcome to Cougar Books!"),
+                  Text("Welcome to Cougar Books!", style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
                   LoginForm(),
                   // Padding(

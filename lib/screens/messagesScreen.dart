@@ -183,7 +183,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   );
                 },
                 itemCount: contacts.length,
-                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
               ),
             ],
           ),
