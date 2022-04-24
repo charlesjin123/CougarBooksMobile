@@ -25,37 +25,9 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   void initState() {
-    print("refreshing account screen.");
-    Map<String, dynamic> profile = {};
-    // FirebaseDatabase.instance.reference().child("users/" + AuthManager.getuid()).once()
-    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).once()
-        .then((datasnapshot) {
-      profile["username"] = datasnapshot.value["username"];
-      profile["email"] =  datasnapshot.value["email"];
-      profile["imageURL"] =  datasnapshot.value["imageURL"];
-      profile["items"] = new List<Item>();
-      if (datasnapshot.value["products"] != null) {
-        datasnapshot.value["products"].forEach((k, v) {
-          profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], LocalDB.uid, v["timestamp"], v["category"], v["longtitude"], v["latitude"]));
-        });
-      }
-      // profile["posts"] = new List<Post>();
-      // if (datasnapshot.value["posts"] != null) {
-      //   datasnapshot.value["posts"].forEach((k, v) {
-      //     profile["posts"].add(Post(v["id"], v["title"], v["details"], LocalDB.uid, v["timestamp"], v["longtitude"], v["latitude"]));
-      //   });
-      // }
-      LocalDB.profile = profile;
 
-      // print("Item Length: ${LocalDB.profile["items"].length}");
-      // print("Items: ${profile["items"]}");
-
-      setState(() {});
-    }).catchError((error) {
-      print("Failed to load user data at account screen. ");
-      print(error);
-    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,65 +85,65 @@ class _AccountScreenState extends State<AccountScreen> {
                 ],
               ),
               ProfileDetail(),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Your Products',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      )),
-                  IconButton(
-                      icon: Icon(
-                        Icons.add,
-                        color: Theme.of(context).accentColor,
-                      ),
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => EditItemScreen()),
-                        );
-                        initState();
-                      })
-                ],
-              ),
-              Container(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: LocalDB.profile != null ? LocalDB.profile["items"].length : 0,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => EditItemScreen(item: LocalDB.profile["items"][index])),
-                            );
-                            initState();
-                          },
-                          title: Column(
-                            children: <Widget>[
-                              ProfileProduct(
-                                image: Image(image: NetworkImage(LocalDB.profile["items"][index].imageUrl == null ? "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg" : LocalDB.profile["items"][index].imageUrl)),
-                                name: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].name,
-                                price: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].price.toString(),
-                              ),
-
-                              Divider(
-                                color: Theme
-                                    .of(context)
-                                    .accentColor
-                                    .withOpacity(0.8),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                  )
-              ),
+              // SizedBox(
+              //   height: 15,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: <Widget>[
+              //     Text('Your Products',
+              //         style: TextStyle(
+              //           fontWeight: FontWeight.w500,
+              //           fontSize: 15,
+              //         )),
+              //     IconButton(
+              //         icon: Icon(
+              //           Icons.add,
+              //           color: Theme.of(context).accentColor,
+              //         ),
+              //         onPressed: () async {
+              //           await Navigator.push(
+              //             context,
+              //             MaterialPageRoute(builder: (context) => EditItemScreen()),
+              //           );
+              //           initState();
+              //         })
+              //   ],
+              // ),
+              // Container(
+              //     child: ListView.builder(
+              //         shrinkWrap: true,
+              //         physics: NeverScrollableScrollPhysics(),
+              //         itemCount: LocalDB.profile != null ? LocalDB.profile["items"].length : 0,
+              //         itemBuilder: (BuildContext context, int index) {
+              //           return ListTile(
+              //             onTap: () async {
+              //               await Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(builder: (context) => EditItemScreen(item: LocalDB.profile["items"][index])),
+              //               );
+              //               initState();
+              //             },
+              //             title: Column(
+              //               children: <Widget>[
+              //                 ProfileProduct(
+              //                   image: Image(image: NetworkImage(LocalDB.profile["items"][index].imageUrl == null ? "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg" : LocalDB.profile["items"][index].imageUrl)),
+              //                   name: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].name,
+              //                   price: LocalDB.profile == null ? "" : LocalDB.profile["items"][index].price.toString(),
+              //                 ),
+              //
+              //                 Divider(
+              //                   color: Theme
+              //                       .of(context)
+              //                       .accentColor
+              //                       .withOpacity(0.8),
+              //                 ),
+              //               ],
+              //             ),
+              //           );
+              //         }
+              //     )
+              // ),
               // SizedBox(
               //   height: 15,
               // ),

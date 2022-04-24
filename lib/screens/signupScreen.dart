@@ -10,7 +10,6 @@ class SignUpScreen extends StatelessWidget {
         appBar: GradientAppBar(title: 'Sign Up'),
         body: Container(
           alignment: Alignment.topCenter,
-          margin: EdgeInsets.only(top: 20),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),

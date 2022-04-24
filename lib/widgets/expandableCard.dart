@@ -41,18 +41,18 @@ class _ExpandableCardState extends State<ExpandableCard> {
                   padding: const EdgeInsets.all(8.0),
                   child: widget.content,
                 )),
-            FlatButton(
-                onPressed: () {
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                },
-                child: Text(_expanded ? 'Show Less' : 'Show More',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                      color: Theme.of(context).primaryColor,
-                    ))),
+            // FlatButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         _expanded = !_expanded;
+            //       });
+            //     },
+            //     child: Text(_expanded ? 'Show Less' : 'Show More',
+            //         style: TextStyle(
+            //           fontWeight: FontWeight.w500,
+            //           fontSize: 15,
+            //           color: Theme.of(context).primaryColor,
+            //         ))),
           ],
         ),
       ),

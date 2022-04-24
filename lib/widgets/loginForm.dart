@@ -82,7 +82,24 @@ class _LoginFormState extends State<LoginForm> {
                               context,
                               MaterialPageRoute(builder: (context) => HomeScreen()),
                             );
-                          }).catchError((error) {
+                          }).catchError((error) async {
+                            await showDialog<void>(
+                              context: context,
+                              barrierDismissible: false, // user must tap button!
+                              builder: (BuildContext context) {
+                                String errorMsg = "Invalid Login";
+                                return AlertDialog(
+                                  title: Text('Error: ' + errorMsg,
+                                      style: TextStyle(fontSize: 15)),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                        child: Text('Ok', style: TextStyle(fontSize: 15)),
+                                        onPressed: () => Navigator.of(context).pop(),
+                                    ),
+                                  ],
+                                );
+                              }
+                            );
                             print(error.toString());
                           });
                         },

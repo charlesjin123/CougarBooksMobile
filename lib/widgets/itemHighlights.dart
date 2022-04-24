@@ -40,7 +40,7 @@ class ItemHighlights extends StatelessWidget {
             ListTile(
               leading: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Icon(Icons.money),
+                child: Icon(Icons.attach_money),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
               title: Text("\$" + item.price.toString(),

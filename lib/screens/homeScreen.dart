@@ -3,6 +3,7 @@ import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/accountScreen.dart';
 import 'package:uitest/screens/communityScreen.dart';
 import 'package:uitest/screens/messagesScreen.dart';
+import 'package:uitest/screens/sellScreen.dart';
 import '../data/mockData.dart';
 import 'package:flutter/rendering.dart';
 import '../screens/storeScreen.dart';
@@ -41,9 +42,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     allTabs.forEach((BottomTab tab) {
       switch (tab.iconTitle) {
-        case 'Store':
+        case 'Buy':
           {
             screenList.add(StoreScreen(tab: tab));
+            break;
+          }
+        case 'Sell':
+          {
+            screenList.add(SellScreen(tab: tab));
             break;
           }
         case 'Messages':

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
@@ -88,7 +90,14 @@ class _ChatScreenState extends State<ChatScreen> {
           print("Failed to update last viewed message. " + error.toString());
         });
         setState(() {
-          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          Timer(Duration(milliseconds: 100), () {
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              curve: Curves.easeOut,
+              duration: const Duration(milliseconds: 250),
+            );
+          });
+          //scrollController.jumpTo(scrollController.position.maxScrollExtent);
         });
       }
     }).catchError((error) {
@@ -128,7 +137,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                   child: messageList[index]['type'] != null && messageList[index]['type'] == "image" ?
                                   Image.network(messageList[index]['text']) :
-                                  Text(messageList[index]['text'])
+                                  Text(messageList[index]['text'], style: TextStyle(fontSize: 17),)
                               ),
                               Text(
                                 'Sent at ' + DateTime.fromMillisecondsSinceEpoch(messageList[index]['timestamp']).toString().substring(0, DateTime.fromMillisecondsSinceEpoch(messageList[index]['timestamp']).toString().length-4),
@@ -230,7 +239,25 @@ class _ChatScreenState extends State<ChatScreen> {
               // ),
               IconButton(
                 icon: Icon(Icons.send),
-                onPressed: () {
+                onPressed: () async {
+                  if (messageController.text.length < 1) {
+                    await showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Error: ' + "Message cannot be empty.",
+                              style: TextStyle(fontSize: 15)),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Ok', style: TextStyle(fontSize: 15)),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        );
+                      }
+                    );
+                  }
                   var timestamp = DateTime.now().millisecondsSinceEpoch;
                   var messageRecord = {
                     "text" : messageController.text,

@@ -23,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void filterProducts() {
     searchResults = [];
     for (Item item in LocalDB.items) {
-      if (item.name.toLowerCase().contains(searchController.text.toLowerCase())) {
+      if (item.name.toLowerCase().contains(searchController.text.toLowerCase()) || item.details.toLowerCase().contains(searchController.text.toLowerCase())) {
         searchResults.add(item);
       }
     }
@@ -115,7 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             Duration(seconds: 2), () {
                           List<Item> results = <Item>[];
                           for (Item item in LocalDB.items) {
-                            if (item.name.toLowerCase().contains(searchController.text.toLowerCase())) {
+                            if (item.name.toLowerCase().contains(searchController.text.toLowerCase()) || item.details.toLowerCase().contains(searchController.text.toLowerCase())) {
                               results.add(item);
                             }
                           }

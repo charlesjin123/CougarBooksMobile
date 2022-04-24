@@ -26,6 +26,40 @@ class _StoreScreenState extends State<StoreScreen> {
 
   void initState() {
     loadProducts();
+    initializeProfile();
+  }
+
+  void initializeProfile() {
+    //print("refreshing account screen.");
+    Map<String, dynamic> profile = {};
+    // FirebaseDatabase.instance.reference().child("users/" + AuthManager.getuid()).once()
+    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).once()
+        .then((datasnapshot) {
+      profile["username"] = datasnapshot.value["username"];
+      profile["email"] =  datasnapshot.value["email"];
+      profile["imageURL"] =  datasnapshot.value["imageURL"];
+      profile["items"] = new List<Item>();
+      if (datasnapshot.value["products"] != null) {
+        datasnapshot.value["products"].forEach((k, v) {
+          profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], LocalDB.uid, v["timestamp"], v["category"], v["longtitude"], v["latitude"]));
+        });
+      }
+      // profile["posts"] = new List<Post>();
+      // if (datasnapshot.value["posts"] != null) {
+      //   datasnapshot.value["posts"].forEach((k, v) {
+      //     profile["posts"].add(Post(v["id"], v["title"], v["details"], LocalDB.uid, v["timestamp"], v["longtitude"], v["latitude"]));
+      //   });
+      // }
+      LocalDB.profile = profile;
+
+      // print("Item Length: ${LocalDB.profile["items"].length}");
+      // print("Items: ${profile["items"]}");
+
+      setState(() {});
+    }).catchError((error) {
+      print("Failed to load user data at account screen. ");
+      print(error);
+    });
   }
 
   void loadProducts() {
@@ -62,7 +96,7 @@ class _StoreScreenState extends State<StoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GradientAppBar(title: widget.tab.title, showActions: "search", homeCallBack: () {} ),
+        appBar: GradientAppBar(title: "Store", showActions: "search", homeCallBack: () {} ),
         body: SingleChildScrollView(
           child: Container(
               margin: EdgeInsets.all(10),

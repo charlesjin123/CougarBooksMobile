@@ -8,11 +8,52 @@ class BottomTab {
 }
 
 const List<BottomTab> allTabs = <BottomTab>[
-  BottomTab('Store', Icons.store, 'Store'),
+  BottomTab('Buy', Icons.store, 'Buy'),
+  BottomTab('Sell', Icons.attach_money, 'Sell'),
   BottomTab('Messages', Icons.chat, 'Messages'),
-  // BottomTab('My Courses', Icons.event_note, 'Courses'),
-  // BottomTab('Favourites', Icons.favorite_border, 'Favourites'),
   BottomTab('Profile', Icons.person, 'Profile'),
+];
+
+// const List<String> categories = [
+//   'English',
+//   'History',
+//   'Psychology',
+//   'Economics',
+//   'Computer Science',
+//   'Physics',
+//   'Biology',
+//   'Chemistry',
+//   'Math',
+//   'Statistics',
+//   'Geometry',
+//   'Calculus',
+//   'Linear Algebra',
+// ];
+const List<String> categories = [
+  'AP',
+  'IB'
+  'History',
+  'World History',
+  'European History',
+  'U.S. History',
+  'Social Studies',
+  'Economics',
+  'Psychology',
+  'English',
+  'ESL',
+  'Math',
+  'Science',
+  'Biology',
+  'Chemistry',
+  'Physics',
+  'Engineering',
+  'Design',
+  'Computer Science',
+  'World Language',
+  'Chinese',
+  'Spanish',
+  'Arts',
+  'Music',
 ];
 
 class Course {

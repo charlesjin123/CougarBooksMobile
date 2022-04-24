@@ -22,14 +22,14 @@ class _EditProfileState extends State<EditProfileForm> {
   final _formKey = GlobalKey<FormState>();
 
   var usernameController = TextEditingController();
-  var emailController = TextEditingController();
+  //var emailController = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     usernameController.text = LocalDB.profile["username"];
-    emailController.text = LocalDB.profile["email"];
+    //emailController.text = LocalDB.profile["email"];
   }
 
   @override
@@ -39,22 +39,30 @@ class _EditProfileState extends State<EditProfileForm> {
         child: Container(
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width * 0.90,
-            padding: EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(left: 15),
+                  child: Text('Username',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
                 InputTextField(
                   keyboardType: TextInputType.text,
                   prefixIcon: Icons.person,
-                  hint: 'Username',
                   controller: usernameController,
                 ),
-                InputTextField(
-                  keyboardType: TextInputType.text,
-                  prefixIcon: Icons.email,
-                  hint: 'Email',
-                  controller: emailController,
-                ),
+                // InputTextField(
+                //   keyboardType: TextInputType.text,
+                //   prefixIcon: Icons.email,
+                //   hint: 'Email',
+                //   controller: emailController,
+                // ),
                 Container(
                     margin: EdgeInsets.all(20),
                     child: FlatButton.icon(
@@ -86,7 +94,7 @@ class _EditProfileState extends State<EditProfileForm> {
     FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).update(
         {
           "username": usernameController.text,
-          "email": emailController.text,
+          //"email": emailController.text,
         }
     ).then((value1) {
       Navigator.pop(context);

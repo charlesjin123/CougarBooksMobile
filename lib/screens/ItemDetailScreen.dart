@@ -66,7 +66,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     maxHeight: 150.0,
                     content: RichText(
                       text: TextSpan(
-                        text: widget.item.details + "\nCategories: " + widget.item.category.toString(),
+                        text: widget.item.details +
+                            "\nCategories: " + (widget.item.category.toString().toLowerCase() != "null" ?
+                        (widget.item.category.toString().substring(1, widget.item.category.toString().length-1)) :
+                        "None"),
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       softWrap: true,
@@ -120,64 +123,68 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       ),
                     ),
                   ) : Text(""),
-                  widget.item.uid != LocalDB.uid ? ElevatedButton(
-                    onPressed: () async {
-                      String uid1 = "";
-                      String uid2 = "";
-                      if (LocalDB.uid.compareTo(widget.item.uid) < 0) {
-                        uid1 = LocalDB.uid;
-                        uid2 = widget.item.uid;
-                      } else {
-                        uid1 = widget.item.uid;
-                        uid2 = LocalDB.uid;
-                      }
-                      String path = uid1 + "-" + uid2;
-                      FirebaseDatabase.instance.reference().child("messages/" + path).once()
-                          .then((datasnapshot) {
-                        if (datasnapshot.value == null) {
-                          FirebaseDatabase.instance.reference().child("messages/" + path).set(
-                              {
-                                "threadID": path,
-                              }
-                          ).then((value1) {
-                            print("Message thread successfully added");
-                            FirebaseDatabase.instance.reference().child("users/" + uid1 + "/messageList/" + uid2).set(
+                  widget.item.uid != LocalDB.uid ? Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    height: 60,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        String uid1 = "";
+                        String uid2 = "";
+                        if (LocalDB.uid.compareTo(widget.item.uid) < 0) {
+                          uid1 = LocalDB.uid;
+                          uid2 = widget.item.uid;
+                        } else {
+                          uid1 = widget.item.uid;
+                          uid2 = LocalDB.uid;
+                        }
+                        String path = uid1 + "-" + uid2;
+                        FirebaseDatabase.instance.reference().child("messages/" + path).once()
+                            .then((datasnapshot) {
+                          if (datasnapshot.value == null) {
+                            FirebaseDatabase.instance.reference().child("messages/" + path).set(
                                 {
-                                  "path": path,
+                                  "threadID": path,
                                 }
-                            ).then((value2) {
-                              print("Linked user 2 under user 1");
+                            ).then((value1) {
+                              print("Message thread successfully added");
+                              FirebaseDatabase.instance.reference().child("users/" + uid1 + "/messageList/" + uid2).set(
+                                  {
+                                    "path": path,
+                                  }
+                              ).then((value2) {
+                                print("Linked user 2 under user 1");
+                              }).catchError((error) {
+                                print("Failed to link user 2 under user 1. " + error.toString());
+                              });
+                              FirebaseDatabase.instance.reference().child("users/" + uid2 + "/messageList/" + uid1).set(
+                                  {
+                                    "path": path,
+                                  }
+                              ).then((value2) {
+                                print("Linked user 1 under user 2");
+                              }).catchError((error) {
+                                print("Failed to link user 1 under user 2. " + error.toString());
+                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ChatScreen(path)),
+                              );
                             }).catchError((error) {
-                              print("Failed to link user 2 under user 1. " + error.toString());
+                              print("Failed to create message thread. " + error.toString());
                             });
-                            FirebaseDatabase.instance.reference().child("users/" + uid2 + "/messageList/" + uid1).set(
-                                {
-                                  "path": path,
-                                }
-                            ).then((value2) {
-                              print("Linked user 1 under user 2");
-                            }).catchError((error) {
-                              print("Failed to link user 1 under user 2. " + error.toString());
-                            });
+                          } else {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => ChatScreen(path)),
                             );
-                          }).catchError((error) {
-                            print("Failed to create message thread. " + error.toString());
-                          });
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ChatScreen(path)),
-                          );
-                        }
-                      }).catchError((error) {
-                        print("Error with reading conversation path");
-                        print(error);
-                      });
-                    },
-                    child: Text("Send Message", style: TextStyle(fontSize: 20)),
+                          }
+                        }).catchError((error) {
+                          print("Error with reading conversation path");
+                          print(error);
+                        });
+                      },
+                      child: Text("Send Message", style: TextStyle(fontSize: 20)),
+                    ),
                   ) : Text(""),
                 ],
               )),

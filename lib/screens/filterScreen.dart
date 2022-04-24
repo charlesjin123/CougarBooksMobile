@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
+import 'package:uitest/data/mockData.dart';
 import 'package:uitest/widgets/gradientAppBar.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -10,21 +11,7 @@ class FilterScreen extends StatefulWidget {
 class _FilterScreenState extends State<FilterScreen> {
   RangeValues _priceRange = RangeValues(LocalDB.min, LocalDB.max);
   //RangeValues _distanceRange = RangeValues(LocalDB.minDist, LocalDB.maxDist);
-  List<String> _categories = [
-    'English',
-    'History',
-    'Psychology',
-    'Economics',
-    'Computer Science',
-    'Physics',
-    'Biology',
-    'Chemistry',
-    'Math',
-    'Statistics',
-    'Geometry',
-    'Calculus',
-    'Linear Algebra',
-  ];
+  List<String> _categories = categories;
   //List<String> _selectedCategories = [];
   //List<int> _selectedRating = [5, 3, 2];
   //List<int> _ratings = List.generate(5, (index) => index + 1);

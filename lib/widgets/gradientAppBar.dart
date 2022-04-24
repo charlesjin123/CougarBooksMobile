@@ -81,7 +81,7 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
                 barrierDismissible: false, // user must tap button!
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Do you want to exit ?',
+                    title: Text('Do you want to log out?',
                         style: TextStyle(fontSize: 15)),
                     actions: <Widget>[
                       FlatButton(
