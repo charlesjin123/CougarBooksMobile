@@ -69,6 +69,7 @@ flutter:
   assets:
     - assets/images/
     - assets/videos/
+    - assets/eula.txt
 
   # assets:
   #   - images/a_dot_burr.jpeg

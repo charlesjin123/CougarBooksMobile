@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/widgets/gradientAppBar.dart';
+
+import 'homeScreen.dart';
 class ChatScreen extends StatefulWidget {
 
   var path;
@@ -106,10 +108,60 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  void optionsPopUp(){
+    showDialog(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return optionsDialog();
+        }
+    );
+  }
+
+  Widget optionsDialog(){
+    return AlertDialog(
+      title: const Center(child: Text('Options')),
+      // actions: this.actions,
+      content: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(onPressed: reportUser, child: const Text("Block & Report User")),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void reportUser() async {
+    DatabaseReference ref = FirebaseDatabase.instance.reference().child('users/${LocalDB.uid}/blockedUsers');
+    DataSnapshot data = await ref.get();
+    if(data.value == null){
+      DateTime dt = DateTime.now();
+      await ref.set({ otherUid: dt.toIso8601String() });
+    }
+    else{
+      DateTime dt = DateTime.now();
+      await ref.update({ otherUid: dt.toIso8601String() });
+    }
+
+    // Navigator.pop(context);
+    // Navigator.pop(context, true);
+
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+            (route) => false
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(title: otherUsername == null ? "" : otherUsername),
+      //appBar: GradientAppBar(title: otherUsername == null ? "" : otherUsername),
+      appBar: AppBar(
+        title: Center(child: Text(otherUsername == null ? "" : otherUsername)),
+        actions: [IconButton(icon: Icon(Icons.more_vert), onPressed: optionsPopUp)],
+
+      ),
       body: Column(
         children: [
           Expanded(

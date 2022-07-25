@@ -15,6 +15,9 @@ class LocalDB {
   static List<String> selectedCategories = [];
 
   static List<Item> items;
+  static List<Item> newArrivals;
+
+  static bool updateBlockedStoreScreen;
 
   static var chatListener;
 }

@@ -1,4 +1,6 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:uitest/data/LocalDB.dart';
 
 import 'package:uitest/data/mockData.dart';
 import 'package:uitest/screens/CourseDetailScreen.dart';
@@ -17,7 +19,9 @@ class ProductBanner extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ItemDetailScreen(item)));
+            builder: (context) => ItemDetailScreen(item))
+        ).then((value) => () {
+        });
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/loginScreen.dart';
@@ -19,11 +20,27 @@ class SignUpForm extends StatefulWidget {
 class _SignUpState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
 
+  String _eula = "No Data";
+
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
   File image;
+
+  @override
+  initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final _loadedData = await rootBundle.loadString('assets/eula.txt');
+    setState(() {
+      _eula = _loadedData;
+      print(_eula);
+    });
+  }
 
   Future pickImage(ImageSource source) async {
     try {
@@ -34,6 +51,150 @@ class _SignUpState extends State<SignUpForm> {
     } catch (error) {
       print("Failed to pick image: " + error);
     }
+  }
+
+  Widget EULADialog(){
+    return AlertDialog(
+      title: const Center(child: Text('User Agreement')),
+      actions: [
+        ElevatedButton(onPressed: onPressedAgree, child: Text("Agree"))
+      ],
+      content: SingleChildScrollView(
+        child: Text(_eula),
+      ),
+    );
+  }
+
+  void onPressedRegister() async {
+    if(_formKey.currentState.validate()){
+      showDialog(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return EULADialog();
+          }
+      );
+    }
+  }
+
+  void onPressedAgree() async {
+    FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text)
+        .then((value) {
+      FirebaseDatabase.instance.reference().child("users/" + value.user.uid).set(
+          {
+            "username": usernameController.text,
+            "email": emailController.text,
+            "uid": value.user.uid,
+          }
+      ).then((value1) async {
+        LocalDB.uid = value.user.uid;
+        var imageURL;
+        var fileName = "profile-" + DateTime.now().millisecondsSinceEpoch.toString() + '.png';
+        var fileToUpload = image;
+        if (fileToUpload != null) {
+          FirebaseStorage.instance.ref().child("profiles/" + fileName).putFile(fileToUpload).then((taskEvent) {
+            if (taskEvent.state == TaskState.success) {
+              FirebaseStorage.instance.ref().child("profiles/" + fileName).getDownloadURL()
+                  .then((value) {
+                imageURL = value.toString();
+                FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).update(
+                    {
+                      "imageURL": imageURL,
+                    }
+                ).then((value1) async {
+                  await showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Registered Successfully!",
+                              style: TextStyle(fontSize: 15)),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Ok', style: TextStyle(fontSize: 15)),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        );
+                      }
+                  );
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                }).catchError((error) {
+                  print("Failed to add. " + error.toString());
+                });
+              }).catchError((error) {
+                print("Failed to get image URL: " + error.toString());
+              });
+            }
+          }).catchError((error) {
+            print("Failed to upload image: " + error.toString());
+          });
+        } else {
+          await showDialog<void>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error: ' + "Profile image cannot be empty.",
+                      style: TextStyle(fontSize: 15)),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Ok', style: TextStyle(fontSize: 15)),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                );
+              }
+          );
+        }
+      }).catchError((error) async {
+        await showDialog<void>(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              String errorMsg = error.toString().replaceRange(0, error.toString().indexOf("]")+1, "");
+              if (errorMsg.contains("Given String is empty or null")) {
+                errorMsg = "Fields cannot be empty";
+              }
+              return AlertDialog(
+                title: Text('Error: ' + errorMsg,
+                    style: TextStyle(fontSize: 15)),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Ok', style: TextStyle(fontSize: 15)),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              );
+            }
+        );
+        print("Failed to add. " + error.toString());
+      });
+    }).catchError((error) async {
+      await showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            String errorMsg = error.toString().replaceRange(0, error.toString().indexOf("]")+1, "");
+            if (errorMsg.contains("Given String is empty or null")) {
+              errorMsg = "Fields cannot be empty";
+            }
+            return AlertDialog(
+              title: Text('Error: ' + errorMsg,
+                  style: TextStyle(fontSize: 15)),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok', style: TextStyle(fontSize: 15)),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            );
+          }
+      );
+      print(error.toString());
+    });
   }
 
   @override
@@ -148,126 +309,7 @@ class _SignUpState extends State<SignUpForm> {
                         ),
                         padding: EdgeInsets.all(12),
                         color: Theme.of(context).accentColor,
-                        onPressed: () async {
-                          FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text)
-                              .then((value) {
-                            FirebaseDatabase.instance.reference().child("users/" + value.user.uid).set(
-                                {
-                                  "username": usernameController.text,
-                                  "email": emailController.text,
-                                  "uid": value.user.uid,
-                                }
-                            ).then((value1) async {
-                              LocalDB.uid = value.user.uid;
-                              var imageURL;
-                              var fileName = "profile-" + DateTime.now().millisecondsSinceEpoch.toString() + '.png';
-                              var fileToUpload = image;
-                              if (fileToUpload != null) {
-                                FirebaseStorage.instance.ref().child("profiles/" + fileName).putFile(fileToUpload).then((taskEvent) {
-                                  if (taskEvent.state == TaskState.success) {
-                                    FirebaseStorage.instance.ref().child("profiles/" + fileName).getDownloadURL()
-                                        .then((value) {
-                                      imageURL = value.toString();
-                                      FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).update(
-                                          {
-                                            "imageURL": imageURL,
-                                          }
-                                      ).then((value1) async {
-                                        await showDialog<void>(
-                                            context: context,
-                                            barrierDismissible: false, // user must tap button!
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text("Registered Successfully!",
-                                                    style: TextStyle(fontSize: 15)),
-                                                actions: <Widget>[
-                                                  FlatButton(
-                                                    child: Text('Ok', style: TextStyle(fontSize: 15)),
-                                                    onPressed: () => Navigator.of(context).pop(),
-                                                  ),
-                                                ],
-                                              );
-                                            }
-                                        );
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => LoginScreen()),
-                                        );
-                                      }).catchError((error) {
-                                        print("Failed to add. " + error.toString());
-                                      });
-                                    }).catchError((error) {
-                                      print("Failed to get image URL: " + error.toString());
-                                    });
-                                  }
-                                }).catchError((error) {
-                                  print("Failed to upload image: " + error.toString());
-                                });
-                              } else {
-                                await showDialog<void>(
-                                    context: context,
-                                    barrierDismissible: false, // user must tap button!
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('Error: ' + "Profile image cannot be empty.",
-                                            style: TextStyle(fontSize: 15)),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('Ok', style: TextStyle(fontSize: 15)),
-                                            onPressed: () => Navigator.of(context).pop(),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                );
-                              }
-                            }).catchError((error) async {
-                              await showDialog<void>(
-                                context: context,
-                                barrierDismissible: false, // user must tap button!
-                                builder: (BuildContext context) {
-                                  String errorMsg = error.toString().replaceRange(0, error.toString().indexOf("]")+1, "");
-                                  if (errorMsg.contains("Given String is empty or null")) {
-                                    errorMsg = "Fields cannot be empty";
-                                  }
-                                  return AlertDialog(
-                                    title: Text('Error: ' + errorMsg,
-                                        style: TextStyle(fontSize: 15)),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                          child: Text('Ok', style: TextStyle(fontSize: 15)),
-                                          onPressed: () => Navigator.of(context).pop(),
-                                      ),
-                                    ],
-                                  );
-                                }
-                              );
-                              print("Failed to add. " + error.toString());
-                            });
-                          }).catchError((error) async {
-                            await showDialog<void>(
-                              context: context,
-                              barrierDismissible: false, // user must tap button!
-                              builder: (BuildContext context) {
-                                String errorMsg = error.toString().replaceRange(0, error.toString().indexOf("]")+1, "");
-                                if (errorMsg.contains("Given String is empty or null")) {
-                                  errorMsg = "Fields cannot be empty";
-                                }
-                                return AlertDialog(
-                                  title: Text('Error: ' + errorMsg,
-                                      style: TextStyle(fontSize: 15)),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                        child: Text('Ok', style: TextStyle(fontSize: 15)),
-                                        onPressed: () => Navigator.of(context).pop(),
-                                    ),
-                                  ],
-                                );
-                              }
-                            );
-                            print(error.toString());
-                          });
-                        }, // onPressed
+                        onPressed: onPressedRegister,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))))
               ],

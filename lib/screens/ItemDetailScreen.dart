@@ -1,13 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
-import 'package:uitest/data/mockData.dart';
 import 'package:uitest/screens/chatScreen.dart';
-import 'package:uitest/screens/videoPlayerScreen.dart';
 import 'package:uitest/widgets/expandableCard.dart';
 import 'package:uitest/widgets/itemHighlights.dart';
-import 'package:uitest/widgets/gradientAppBar.dart';
 import 'package:uitest/widgets/item.dart';
+
+import 'homeScreen.dart';
 
 class ItemDetailScreen extends StatefulWidget {
 
@@ -38,10 +37,101 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     });
   }
 
+  void optionsPopUp(){
+    showDialog(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return optionsDialog();
+        }
+    );
+  }
+
+  Widget optionsDialog(){
+    return AlertDialog(
+      title: const Center(child: Text('Options')),
+      // actions: this.actions,
+      content: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(onPressed: reportListing, child: const Text("Block & Report Post")),
+            TextButton(onPressed: reportUser, child: const Text("Block & Report User")),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void reportListing() async {
+    DatabaseReference ref = FirebaseDatabase.instance.reference().child('users/${LocalDB.uid}/blockedPosts');
+    DataSnapshot data = await ref.get();
+    if(data.value == null){
+      DateTime dt = DateTime.now();
+      String dtString = dt.toIso8601String();
+      await ref.set({ widget.item.id: dtString });
+
+      // LocalDB.profile["blockedPosts"][widget.item.id] = dtString;
+      // int itemIndex = LocalDB.items.indexWhere((item) => item.id == widget.item.id);
+      // if (itemIndex != -1) {
+      //   LocalDB.items.removeAt(itemIndex);
+      // }
+      // itemIndex = LocalDB.newArrivals.indexWhere((item) => item.id == widget.item.id);
+      // if (itemIndex != -1) {
+      //   LocalDB.newArrivals.removeAt(itemIndex);
+      // }
+    }
+    else{
+      DateTime dt = DateTime.now();
+      String dtString = dt.toIso8601String();
+      await ref.update({ widget.item.id: dtString });
+
+      // LocalDB.profile["blockedPosts"][widget.item.id] = dtString;
+      // int itemIndex = LocalDB.items.indexWhere((item) => item.id == widget.item.id);
+      // if (itemIndex != -1) {
+      //   LocalDB.items.removeAt(itemIndex);
+      // }
+      // itemIndex = LocalDB.newArrivals.indexWhere((item) => item.id == widget.item.id);
+      // if (itemIndex != -1) {
+      //   LocalDB.newArrivals.removeAt(itemIndex);
+      // }
+    }
+
+    // Navigator.pop(context);
+    // Navigator.pop(context, true);
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+        (route) => false
+    );
+  }
+
+  void reportUser() async {
+    DatabaseReference ref = FirebaseDatabase.instance.reference().child('users/${LocalDB.uid}/blockedUsers');
+    DataSnapshot data = await ref.get();
+    if(data.value == null){
+      DateTime dt = DateTime.now();
+      await ref.set({ widget.item.uid: dt.toIso8601String() });
+    }
+    else{
+      DateTime dt = DateTime.now();
+      await ref.update({ widget.item.uid: dt.toIso8601String() });
+    }
+
+    // Navigator.pop(context);
+    // Navigator.pop(context, true);
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+            (route) => false
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GradientAppBar(title: widget.item.name),
+        appBar: AppBar(
+          title: Center(child: Text(widget.item.name)),
+          actions: [IconButton(icon: Icon(Icons.more_vert), onPressed: optionsPopUp)],
+
+        ),
         body: SingleChildScrollView(
           child: Container(
               width: double.infinity,

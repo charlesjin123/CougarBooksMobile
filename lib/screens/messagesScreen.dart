@@ -55,27 +55,29 @@ class _MessagesScreenState extends State<MessagesScreen> {
       if (datasnapshot.value["messageList"] != null) {
         datasnapshot.value["messageList"].forEach((k1,v1) {
           String contactID = k1.toString();
-          int lastViewedTimestamp = v1["lastViewedMessage"] != null ? v1["lastViewedMessage"]["timestamp"] : -1;
-          String path = generatePath(LocalDB.uid, contactID);
-          FirebaseDatabase.instance.reference().child("users/" + contactID).once()
-              .then((datasnapshot1) {
-            FirebaseDatabase.instance.reference().child("messages/" + path + "/lastMessage").once()
-                .then((datasnapshot2) {
-              //print("Last viewed message timestamp in thread: ");
-              //print(datasnapshot2.value["timestamp"]);
-              //print(contactID);
-              int latestTimestamp = datasnapshot2.value != null ? datasnapshot2.value["timestamp"] : -2;
-              bool hasUnread = lastViewedTimestamp != latestTimestamp;
-              contacts.add(Contact(datasnapshot1.value["username"], contactID, datasnapshot1.value["imageURL"], datasnapshot2.value != null ? datasnapshot2.value["text"] : "", hasUnread));
-              setState(() {});
+          if (!LocalDB.profile["blockedUsers"].keys.contains(contactID)) {
+            int lastViewedTimestamp = v1["lastViewedMessage"] != null ? v1["lastViewedMessage"]["timestamp"] : -1;
+            String path = generatePath(LocalDB.uid, contactID);
+            FirebaseDatabase.instance.reference().child("users/" + contactID).once()
+                .then((datasnapshot1) {
+              FirebaseDatabase.instance.reference().child("messages/" + path + "/lastMessage").once()
+                  .then((datasnapshot2) {
+                //print("Last viewed message timestamp in thread: ");
+                //print(datasnapshot2.value["timestamp"]);
+                //print(contactID);
+                int latestTimestamp = datasnapshot2.value != null ? datasnapshot2.value["timestamp"] : -2;
+                bool hasUnread = lastViewedTimestamp != latestTimestamp;
+                contacts.add(Contact(datasnapshot1.value["username"], contactID, datasnapshot1.value["imageURL"], datasnapshot2.value != null ? datasnapshot2.value["text"] : "", hasUnread));
+                setState(() {});
+              }).catchError((error) {
+                print("Failed to get contact last message and username 2.");
+                print(error);
+              });
             }).catchError((error) {
-              print("Failed to get contact last message and username 2.");
+              print("Failed to get contact last message and username. ");
               print(error);
             });
-          }).catchError((error) {
-            print("Failed to get contact last message and username. ");
-            print(error);
-          });
+          }
         });
       }
     }).catchError((error) {

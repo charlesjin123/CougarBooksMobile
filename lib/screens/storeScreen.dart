@@ -21,11 +21,13 @@ class StoreScreen extends StatefulWidget {
 }
 
 class _StoreScreenState extends State<StoreScreen> {
+  bool loading;
   List<Item> items;
-  List<Item> newArrivals;
 
+  @override
   void initState() {
-    loadProducts();
+    super.initState();
+    loading = true;
     initializeProfile();
   }
 
@@ -44,6 +46,16 @@ class _StoreScreenState extends State<StoreScreen> {
           profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], LocalDB.uid, v["timestamp"], v["category"], v["longtitude"], v["latitude"]));
         });
       }
+      // if (datasnapshot.value["blockedPosts"] != null) {
+      //   profile["blockedPosts"] = datasnapshot.value["blockedPosts"];
+      // } else {
+      //   profile["blockedPosts"] = {};
+      // }
+      // if (datasnapshot.value["blockedUsers"] != null) {
+      //   profile["blockedUsers"] = datasnapshot.value["blockedUsers"];
+      // } else {
+      //   profile["blockedUsers"] = {};
+      // }
       // profile["posts"] = new List<Post>();
       // if (datasnapshot.value["posts"] != null) {
       //   datasnapshot.value["posts"].forEach((k, v) {
@@ -55,16 +67,20 @@ class _StoreScreenState extends State<StoreScreen> {
       // print("Item Length: ${LocalDB.profile["items"].length}");
       // print("Items: ${profile["items"]}");
 
-      setState(() {});
+      //loadProducts();
+      updateBlocked();
+
+      //setState(() {});
+
     }).catchError((error) {
       print("Failed to load user data at account screen. ");
       print(error);
     });
   }
 
-  void loadProducts() {
+  Future<void> loadProducts() async {
     items = [];
-    newArrivals = [];
+    LocalDB.newArrivals = [];
     LocalDB.items = [];
     FirebaseDatabase.instance.reference().child("users").once()
         .then((datasnapshot) {
@@ -79,16 +95,51 @@ class _StoreScreenState extends State<StoreScreen> {
       });
       items.forEach((value) {
         if (value.timestamp != null) {
-          LocalDB.items.add(value);
-          newArrivals.add(value);
+
+          if (LocalDB.profile["blockedPosts"].keys.contains(value.id)) {
+            //print("blocked post ${value.id}");
+          } else if (LocalDB.profile["blockedUsers"].keys.contains(value.uid)) {
+            //print("blocked user ${value.uid}");
+          } else {
+            LocalDB.items.add(value);
+            LocalDB.newArrivals.add(value);
+          }
         }
       });
-      newArrivals.sort((a, b) {
+      LocalDB.newArrivals.sort((a, b) {
         return b.timestamp - a.timestamp;
       });
-      setState(() {});
+
+      setState(() {
+        LocalDB.updateBlockedStoreScreen = false;
+        loading = false;
+      });
+
     }).catchError((error) {
       print("Failed to load all products. ");
+      print(error);
+    });
+  }
+
+  void updateBlocked() {
+    loading = true;
+    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).once()
+        .then((datasnapshot) {
+      if (datasnapshot.value["blockedPosts"] != null) {
+        LocalDB.profile["blockedPosts"] = datasnapshot.value["blockedPosts"];
+      } else {
+        LocalDB.profile["blockedPosts"] = {};
+      }
+      if (datasnapshot.value["blockedUsers"] != null) {
+        LocalDB.profile["blockedUsers"] = datasnapshot.value["blockedUsers"];
+      } else {
+        LocalDB.profile["blockedUsers"] = {};
+      }
+
+      loadProducts();
+
+    }).catchError((error) {
+      print("Failed to load user data at account screen. ");
       print(error);
     });
   }
@@ -97,7 +148,15 @@ class _StoreScreenState extends State<StoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GradientAppBar(title: "Store", showActions: "search", homeCallBack: () {} ),
-        body: SingleChildScrollView(
+        body: loading
+            ? Align(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+          ),
+        )
+            :
+        SingleChildScrollView(
           child: Container(
               margin: EdgeInsets.all(10),
               width: double.infinity,
@@ -109,14 +168,14 @@ class _StoreScreenState extends State<StoreScreen> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      var tmpProduct = newArrivals[index];
+                      var tmpProduct = LocalDB.newArrivals[index];
                       return Container(
                           padding: EdgeInsets.only(top: 10, left: 5, right: 5),
                           child: ProductBanner(
                             item: tmpProduct,
                           ));
                     },
-                    itemCount: newArrivals.length,
+                    itemCount: LocalDB.newArrivals.length,
                   ),
                   // Container(
                   //   height: 150,
