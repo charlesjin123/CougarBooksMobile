@@ -78,9 +78,12 @@ class _LoginFormState extends State<LoginForm> {
                           FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text)
                               .then((value) {
                             LocalDB.uid = value.user.uid;
-                            Navigator.pushReplacement(
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (context) => HomeScreen()),
+                              (route) => true,
                             );
                           }).catchError((error) async {
                             await showDialog<void>(

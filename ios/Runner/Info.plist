@@ -29,7 +29,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Take product or avatar image</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>Select product or avatar image</string>
+	<string>Select product or avatar image</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

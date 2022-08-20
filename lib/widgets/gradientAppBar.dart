@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/editPostScreen.dart';
 import 'package:uitest/screens/filterScreen.dart';
+import 'package:uitest/screens/homeScreenNotLoggedIn.dart';
 import 'package:uitest/screens/loginScreen.dart';
 import 'package:uitest/screens/postFilterScreen.dart';
 import 'package:uitest/screens/searchScreen.dart';
@@ -93,10 +95,11 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   TextStyle(fontSize: 15, color: Colors.white)),
                           color: Theme.of(context).primaryColor,
                           onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
+                            FirebaseAuth.instance.signOut().then((value) =>                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => LoginScreen()),
-                                (Route<dynamic> route) => false);
+                                    builder: (context) => HomeScreenNotLoggedIn()),
+                                    (Route<dynamic> route) => false)
+                            );
                           }),
                     ],
                   );
