@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/data/LocalDB.dart';
@@ -126,10 +127,15 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> actions = [];
+    if(FirebaseAuth.instance.currentUser != null){
+      actions.add(IconButton(icon: Icon(Icons.more_vert), onPressed: optionsPopUp));
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Center(child: Text(widget.item.name)),
-          actions: [IconButton(icon: Icon(Icons.more_vert), onPressed: optionsPopUp)],
+          actions: actions,
 
         ),
         body: SingleChildScrollView(
@@ -213,6 +219,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       ),
                     ),
                   ) : Text(""),
+                  FirebaseAuth.instance.currentUser != null ?
                   widget.item.uid != LocalDB.uid ? Container(
                     margin: EdgeInsets.symmetric(vertical: 5),
                     height: 60,
@@ -275,7 +282,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       },
                       child: Text("Send Message", style: TextStyle(fontSize: 20)),
                     ),
-                  ) : Text(""),
+                  ) : Text("")  : Text(""),
                 ],
               )),
         ));

@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uitest/screens/loginScreen.dart';
+
+import 'homeScreenNotLoggedIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,13 +19,17 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   navigateToApp() async {
+    await FirebaseAuth.instance.signOut();
     var _duration = Duration(seconds: 2);
     return Timer(
         _duration,
         () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => LoginScreen())));
+
+              builder: (BuildContext context) => HomeScreenNotLoggedIn())));
+
+        // builder: (BuildContext context) => LoginScreen())));
   }
 
   @override
