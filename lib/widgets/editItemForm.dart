@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/data/mockData.dart';
 import 'package:uitest/screens/accountScreen.dart';
+import 'package:uitest/screens/homeScreen.dart';
 import 'package:uitest/screens/loginScreen.dart';
 import 'package:uitest/screens/takePictureScreen.dart';
 import 'package:uitest/widgets/inputTextField.dart';
@@ -43,6 +44,8 @@ class _EditItemState extends State<EditItemForm> {
   var imageURL;
   bool imagePicked = false;
   File image;
+
+  var loading = false;
 
   Future pickImage(ImageSource source) async {
     try {
@@ -93,7 +96,7 @@ class _EditItemState extends State<EditItemForm> {
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width * 0.90,
             padding: EdgeInsets.all(10),
-            child: Column(
+            child: loading == false ? Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 !imagePicked ? Container(
@@ -308,7 +311,11 @@ class _EditItemState extends State<EditItemForm> {
                                   actions: <Widget>[
                                     FlatButton(
                                       child: Text('Ok', style: TextStyle(fontSize: 15)),
-                                      onPressed: () => Navigator.of(context).pop(),
+                                      onPressed: () {
+                                        loading = false;
+                                        setState(() {});
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
                                   ],
                                 );
@@ -323,24 +330,65 @@ class _EditItemState extends State<EditItemForm> {
                     )
                 ),
               ],
-            )));
+            ) : CircularProgressIndicator(),
+        ));
   }
 
   void deleteItem() {
     String path = widget.item.id;
     FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/item" + path).remove().then((value1) {
-      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+              (route) => false
+      );
     }).catchError((error) {
       print("Failed to remove. " + error.toString());
     });
   }
 
+  void errorMessage(String message) async {
+    await showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error: ' + message,
+                style: TextStyle(fontSize: 15)),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok', style: TextStyle(fontSize: 15)),
+                onPressed: () {
+                  loading = false;
+                  setState(() {});
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+    );
+    return;
+  }
+
   void saveItemToAccountPage() {
+    loading = true;
+    setState(() {});
     var timestamp = new DateTime.now().millisecondsSinceEpoch;
     String path = timestamp.toString();
     if (widget.item != null) {
       path = widget.item.id;
     }
+
+    if (nameController.text == null || nameController.text == "") {
+      errorMessage("Name cannot be empty.");
+      return;
+    }
+
+    if (image == null && (imageURL == null || imageURL == "")) {
+      errorMessage("Image cannot be empty.");
+      return;
+    }
+
     FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/item" + path).update(
         {
           "name": nameController.text,
@@ -377,13 +425,21 @@ class _EditItemState extends State<EditItemForm> {
                         actions: <Widget>[
                           FlatButton(
                             child: Text('Ok', style: TextStyle(fontSize: 15)),
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () {
+                              loading = false;
+                              setState(() {});
+                              Navigator.of(context).pop();
+                            },
                           ),
                         ],
                       );
                     }
                 );
-                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (route) => false
+                );
+                //Navigator.pop(context);
               }).catchError((error) {
                 print("Failed to add. " + error.toString());
               });
@@ -405,13 +461,21 @@ class _EditItemState extends State<EditItemForm> {
               actions: <Widget>[
                 FlatButton(
                   child: Text('Ok', style: TextStyle(fontSize: 15)),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    loading = false;
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             );
           }
         );
-        Navigator.pop(context);
+        // Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+                (route) => false
+        );
       } else {
         await showDialog<void>(
           context: context,
@@ -423,7 +487,11 @@ class _EditItemState extends State<EditItemForm> {
               actions: <Widget>[
                 FlatButton(
                   child: Text('Ok', style: TextStyle(fontSize: 15)),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    loading = false;
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             );
@@ -445,7 +513,11 @@ class _EditItemState extends State<EditItemForm> {
             actions: <Widget>[
               FlatButton(
                   child: Text('Ok', style: TextStyle(fontSize: 15)),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    loading = false;
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
               ),
             ],
           );

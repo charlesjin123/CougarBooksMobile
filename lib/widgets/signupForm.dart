@@ -22,6 +22,8 @@ class _SignUpState extends State<SignUpForm> {
 
   String _eula = "No Data";
 
+  var loading = false;
+
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
@@ -77,6 +79,58 @@ class _SignUpState extends State<SignUpForm> {
   }
 
   void onPressedAgree() async {
+    loading = true;
+    setState(() {});
+    Navigator.of(context).pop();
+
+    if (image == null) {
+      await showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error: ' + "Profile image cannot be empty.",
+                  style: TextStyle(fontSize: 15)),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok', style: TextStyle(fontSize: 15)),
+                  onPressed: () {
+                    loading = false;
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+      );
+      return;
+    }
+
+    if (usernameController.text == null) {
+      await showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error: ' + "Username cannot be empty.",
+                  style: TextStyle(fontSize: 15)),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok', style: TextStyle(fontSize: 15)),
+                  onPressed: () {
+                    loading = false;
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+      );
+      return;
+    }
+
     FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text)
         .then((value) {
       FirebaseDatabase.instance.reference().child("users/" + value.user.uid).set(
@@ -111,12 +165,15 @@ class _SignUpState extends State<SignUpForm> {
                           actions: <Widget>[
                             FlatButton(
                               child: Text('Ok', style: TextStyle(fontSize: 15)),
-                              onPressed: () => Navigator.of(context).pop(),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
                           ],
                         );
                       }
                   );
+                  loading = false;
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -142,7 +199,11 @@ class _SignUpState extends State<SignUpForm> {
                   actions: <Widget>[
                     FlatButton(
                       child: Text('Ok', style: TextStyle(fontSize: 15)),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        loading = false;
+                        setState(() {});
+                        Navigator.of(context).pop();
+                      },
                     ),
                   ],
                 );
@@ -164,7 +225,11 @@ class _SignUpState extends State<SignUpForm> {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Ok', style: TextStyle(fontSize: 15)),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      loading = false;
+                      setState(() {});
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               );
@@ -187,7 +252,11 @@ class _SignUpState extends State<SignUpForm> {
               actions: <Widget>[
                 FlatButton(
                   child: Text('Ok', style: TextStyle(fontSize: 15)),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    loading = false;
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             );
@@ -199,120 +268,149 @@ class _SignUpState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        key: _formKey,
-        child: Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.90,
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        loading == false ? Form(
+            key: _formKey,
+            child: Stack(
+              children: [
                 Container(
-                  height: 200,
-                  child: image != null ? Image.file(image) : Image.network("https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg"),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10, bottom: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            pickImage(ImageSource.camera);
-                            // final cameras = await availableCameras();
-                            // final firstCamera = cameras.first;
-                            // var newURL = await Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera, type: "profile")),
-                            // );
-                            // imageURL = newURL != null ? newURL : imageURL;
-                            // setState(() {});
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.90,
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: 200,
+                          child: image != null ? Image.file(image) : Image.network("https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg"),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 10, bottom: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 150,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    pickImage(ImageSource.camera);
+                                    // final cameras = await availableCameras();
+                                    // final firstCamera = cameras.first;
+                                    // var newURL = await Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera, type: "profile")),
+                                    // );
+                                    // imageURL = newURL != null ? newURL : imageURL;
+                                    // setState(() {});
+                                  },
+                                  child: Container(
+                                    child: Text("Take Profile Picture", style: TextStyle(fontSize: 17), textAlign: TextAlign.center,),
+                                    margin: EdgeInsets.only(top: 5, bottom: 5),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20),
+                              Container(
+                                width: 150,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    pickImage(ImageSource.gallery);
+                                  },
+                                  child: Container(
+                                    child: Text("Choose Profile Picture", style: TextStyle(fontSize: 17), textAlign: TextAlign.center,),
+                                    margin: EdgeInsets.only(top: 5, bottom: 5),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        InputTextField(
+                          keyboardType: TextInputType.text,
+                          prefixIcon: Icons.person,
+                          hint: 'Username',
+                          validationFunction: (value) {
+                            if (value.isEmpty) {
+                              return 'Username is required';
+                            }
+                            return null;
                           },
-                          child: Container(
-                            child: Text("Take Profile Picture", style: TextStyle(fontSize: 17), textAlign: TextAlign.center,),
-                            margin: EdgeInsets.only(top: 5, bottom: 5),
-                          ),
+                          controller: usernameController,
                         ),
-                      ),
-                      SizedBox(width: 20),
-                      Container(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            pickImage(ImageSource.gallery);
+                        InputTextField(
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIcon: Icons.email,
+                          hint: 'Email Address',
+                          validationFunction: (value) {
+                            if (value.isEmpty) {
+                              return 'Email Address is required';
+                            }
+                            return null;
                           },
-                          child: Container(
-                            child: Text("Choose Profile Picture", style: TextStyle(fontSize: 17), textAlign: TextAlign.center,),
-                            margin: EdgeInsets.only(top: 5, bottom: 5),
-                          ),
+                          controller: emailController,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                InputTextField(
-                  keyboardType: TextInputType.text,
-                  prefixIcon: Icons.person,
-                  hint: 'Username',
-                  validationFunction: (value) {
-                    if (value.isEmpty) {
-                      return 'Username is required';
-                    }
-                    return null;
-                  },
-                  controller: usernameController,
-                ),
-                InputTextField(
-                  keyboardType: TextInputType.emailAddress,
-                  prefixIcon: Icons.email,
-                  hint: 'Email Address',
-                  validationFunction: (value) {
-                    if (value.isEmpty) {
-                      return 'Email Address is required';
-                    }
-                    return null;
-                  },
-                  controller: emailController,
-                ),
-                InputTextField(
-                  keyboardType: TextInputType.visiblePassword,
-                  prefixIcon: Icons.lock,
-                  hint: 'Password',
-                  validationFunction: (value) {
-                    if (value.isEmpty) {
-                      return 'Password is required';
-                    }
-                    return null;
-                  },
-                  controller: passwordController,
-                ),
-                Container(
-                    margin: EdgeInsets.all(20),
-                    child: FlatButton.icon(
-                        icon: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 20,
+                        InputTextField(
+                          keyboardType: TextInputType.visiblePassword,
+                          prefixIcon: Icons.lock,
+                          hint: 'Password',
+                          validationFunction: (value) {
+                            if (value.isEmpty) {
+                              return 'Password is required';
+                            }
+                            return null;
+                          },
+                          controller: passwordController,
                         ),
-                        label: Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 20.0),
-                          child: Text(
-                            "Register",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                letterSpacing: 1),
-                          ),
-                        ),
-                        padding: EdgeInsets.all(12),
-                        color: Theme.of(context).accentColor,
-                        onPressed: onPressedRegister,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))))
+                        Container(
+                            margin: EdgeInsets.all(20),
+                            child: FlatButton.icon(
+                                icon: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                label: Padding(
+                                  padding: const EdgeInsets.only(left: 10, right: 20.0),
+                                  child: Text(
+                                    "Register",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        letterSpacing: 1),
+                                  ),
+                                ),
+                                padding: EdgeInsets.all(12),
+                                color: Theme.of(context).accentColor,
+                                onPressed: onPressedRegister,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)))),
+                      ],
+                    )
+                ),
+                // if (loading)
+                //   ModalBarrier(dismissible: false, color: Colors.black),
               ],
-            )));
+            )
+        ) : Center(
+          child: CircularProgressIndicator(),
+        ),
+        // if (loading)
+        //    SizedBox(
+        //      height: double.infinity,
+        //      child: Opacity(
+        //       opacity: 0.3,
+        //       child: ModalBarrier(dismissible: false, color: Colors.black),
+        //      ),
+        //    ),
+        // if (loading)
+        //   const Center(
+        //     child: CircularProgressIndicator(),
+        //   ),
+        // if (loading)
+        //   CircularProgressIndicator(),
+      ],
+    );
   }
 }

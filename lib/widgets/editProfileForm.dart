@@ -9,6 +9,7 @@ import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:uitest/data/LocalDB.dart';
 import 'package:uitest/screens/accountScreen.dart';
+import 'package:uitest/screens/homeScreen.dart';
 import 'package:uitest/screens/loginScreen.dart';
 import 'package:uitest/widgets/inputTextField.dart';
 import 'package:uitest/widgets/item.dart';
@@ -97,7 +98,11 @@ class _EditProfileState extends State<EditProfileForm> {
           //"email": emailController.text,
         }
     ).then((value1) {
-      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+              (route) => false
+      );
+      // Navigator.pop(context);
     }).catchError((error) {
       print("Failed to save profile. " + error.toString());
     });

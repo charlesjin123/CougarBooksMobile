@@ -31,7 +31,10 @@ class MessagesScreen extends StatefulWidget {
 class _MessagesScreenState extends State<MessagesScreen> {
   List<Contact> contacts;
 
+  var loading = false;
+
   void initState() {
+    loading = true;
     loadContacts();
   }
 
@@ -49,6 +52,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
   }
 
   void loadContacts() {
+    loading = true;
     contacts = [];
     FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid).once()
         .then((datasnapshot) {
@@ -68,6 +72,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 int latestTimestamp = datasnapshot2.value != null ? datasnapshot2.value["timestamp"] : -2;
                 bool hasUnread = lastViewedTimestamp != latestTimestamp;
                 contacts.add(Contact(datasnapshot1.value["username"], contactID, datasnapshot1.value["imageURL"], datasnapshot2.value != null ? datasnapshot2.value["text"] : "", hasUnread));
+                loading = false;
                 setState(() {});
               }).catchError((error) {
                 print("Failed to get contact last message and username 2.");
@@ -79,6 +84,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
             });
           }
         });
+        loading = false;
+      } else {
+        loading = false;
+        print("hi");
       }
     }).catchError((error) {
       print("Failed to load all contacts. ");
@@ -94,7 +103,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
         child: Container(
           width: double.infinity,
           margin: EdgeInsets.all(10),
-          child: Column(
+          child: contacts.length > 0 || loading == true ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ListView.builder(
@@ -188,7 +197,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 physics: NeverScrollableScrollPhysics(),
               ),
             ],
-          ),
+          ) : Center(
+              child: Text('No Contacts',
+                  style: TextStyle(fontSize: 20, color: Colors.grey[500]))),
         ),
       ),
     );

@@ -31,7 +31,7 @@ const List<BottomTab> allTabs = <BottomTab>[
 // ];
 const List<String> categories = [
   'AP',
-  'IB'
+  'IB',
   'History',
   'World History',
   'European History',
@@ -42,6 +42,7 @@ const List<String> categories = [
   'English',
   'ESL',
   'Math',
+  'Statistics',
   'Science',
   'Biology',
   'Chemistry',

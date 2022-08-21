@@ -56,9 +56,9 @@ class _StoreScreenState extends State<StoreScreen> {
           print(v);
           print('making item');
           print(v);
-          Item item = Item(v["id"], v["name"], double.parse(v["price"]), v["details"], v["imageURL"], v["uid"], v["timestamp"], [], v["longtitude"], v["latitude"]);
+          Item item = Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], v["uid"], v["timestamp"], v["category"], v["longtitude"], v["latitude"]);
           print("item $item");
-          profile["items"].add(Item(v["id"], v["name"], double.parse(v["price"]), v["details"], v["imageURL"], v["uid"], v["timestamp"], [], v["longtitude"], v["latitude"]));
+          profile["items"].add(Item(v["id"], v["name"], v["price"].toDouble(), v["details"], v["imageURL"], v["uid"], v["timestamp"], v["category"], v["longtitude"], v["latitude"]));
         });
       }
       // if (datasnapshot.value["blockedPosts"] != null) {
@@ -134,7 +134,7 @@ class _StoreScreenState extends State<StoreScreen> {
               var latitude = v1["latitude"];
 
               Item item = Item(id, name, price, details, imageUrl, uid, timestamp, category, longitude, latitude);
-              LocalDB.items.add(item);
+              //LocalDB.items.add(item);
               items.add(item);
             }
             catch(e){
@@ -225,7 +225,7 @@ class _StoreScreenState extends State<StoreScreen> {
 
               Item item = Item(id, name, price, details, imageUrl, uid, timestamp, category, longitude, latitude);
               // print("item $item");
-              LocalDB.items.add(item);
+              //LocalDB.items.add(item);
               items.add(item);
               // print("Valid Item");
             }

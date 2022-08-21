@@ -34,18 +34,25 @@ class _HomeScreenState extends State<HomeScreenNotLoggedIn> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
-          onPressed: (){
-            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => LoginScreen()));
-          },
-          child: Column(
-              children:[
-                Icon(Icons.login),
-                Text('Login')
-              ]
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 100.0, right: 100.0),
+            child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => LoginScreen()));
+              },
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:[
+                    Text('Login'),
+                    SizedBox(width: 5),
+                    Icon(Icons.login),
+                  ]
+              ),
+            ),
           ),
         ),
       ],
@@ -63,6 +70,7 @@ class _HomeScreenState extends State<HomeScreenNotLoggedIn> {
               bottomRow(),
             ],
           ),
+        ),
     );
   }
 }
