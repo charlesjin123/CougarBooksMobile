@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 150,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/images/Cougar Books Logo Transparent.png'),
+                      image: AssetImage('assets/images/NewCougarBooksLogoTransparent.png'),
                       fit: BoxFit.contain,
                       alignment: Alignment.center)),
             ),

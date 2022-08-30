@@ -49,6 +49,7 @@ class _StoreScreenState extends State<StoreScreen> {
 
       profile["username"] = datasnapshot.value["username"];
       profile["email"] =  datasnapshot.value["email"];
+      profile["phone"] =  datasnapshot.value["phone"];
       profile["imageURL"] =  datasnapshot.value["imageURL"];
       profile["items"] = new List<Item>();
       if (datasnapshot.value["products"] != null) {

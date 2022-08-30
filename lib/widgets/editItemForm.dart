@@ -336,7 +336,7 @@ class _EditItemState extends State<EditItemForm> {
 
   void deleteItem() {
     String path = widget.item.id;
-    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/item" + path).remove().then((value1) {
+    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/" + path).remove().then((value1) {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
               (route) => false
@@ -389,7 +389,7 @@ class _EditItemState extends State<EditItemForm> {
       return;
     }
 
-    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/item" + path).update(
+    FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/" + path).update(
         {
           "name": nameController.text,
           "price": double.parse(priceController.text),
@@ -410,7 +410,7 @@ class _EditItemState extends State<EditItemForm> {
             FirebaseStorage.instance.ref().child("products/"+LocalDB.uid+"/" + fileName).getDownloadURL()
                 .then((value) {
               imageURL = value.toString();
-              FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/item" + path).update(
+              FirebaseDatabase.instance.reference().child("users/" + LocalDB.uid + "/products/" + path).update(
                   {
                     "imageURL": imageURL,
                   }

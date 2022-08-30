@@ -26,6 +26,7 @@ class _SignUpState extends State<SignUpForm> {
 
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
+  var phoneController = TextEditingController();
   var passwordController = TextEditingController();
 
   File image;
@@ -131,12 +132,37 @@ class _SignUpState extends State<SignUpForm> {
       return;
     }
 
+    if (phoneController.text == null) {
+      await showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error: ' + "Phone Number cannot be empty.",
+                  style: TextStyle(fontSize: 15)),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok', style: TextStyle(fontSize: 15)),
+                  onPressed: () {
+                    loading = false;
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+      );
+      return;
+    }
+
     FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text)
         .then((value) {
       FirebaseDatabase.instance.reference().child("users/" + value.user.uid).set(
           {
             "username": usernameController.text,
             "email": emailController.text,
+            "phone": phoneController.text,
             "uid": value.user.uid,
           }
       ).then((value1) async {
@@ -350,6 +376,18 @@ class _SignUpState extends State<SignUpForm> {
                             return null;
                           },
                           controller: emailController,
+                        ),
+                        InputTextField(
+                          keyboardType: TextInputType.phone,
+                          prefixIcon: Icons.phone,
+                          hint: 'Phone Number',
+                          validationFunction: (value) {
+                            if (value.isEmpty) {
+                              return 'Phone Number is required';
+                            }
+                            return null;
+                          },
+                          controller: phoneController,
                         ),
                         InputTextField(
                           keyboardType: TextInputType.visiblePassword,

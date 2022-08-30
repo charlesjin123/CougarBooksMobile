@@ -52,9 +52,9 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 flutter_icons:
-  android: false
+  android: true
   ios: true
-  image_path: "assets/images/Cougar Books Logo.png"
+  image_path: "assets/images/NewCougarBooksLogo.png"
   remove_alpha_ios: true
 
 # The following section is specific to Flutter.
