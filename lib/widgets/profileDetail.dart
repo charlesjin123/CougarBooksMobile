@@ -24,10 +24,10 @@ class ProfileDetail extends StatelessWidget {
         Divider(
           color: Theme.of(context).accentColor.withOpacity(0.8),
         ),
-        ProfileItem(icon: Icons.phone, text: LocalDB.profile == null ? "" : LocalDB.profile["phone"]),
-        Divider(
-          color: Theme.of(context).accentColor.withOpacity(0.8),
-        ),
+        // ProfileItem(icon: Icons.phone, text: LocalDB.profile == null ? "" : LocalDB.profile["phone"]),
+        // Divider(
+        //   color: Theme.of(context).accentColor.withOpacity(0.8),
+        // ),
       ],
     ));
   }

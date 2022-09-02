@@ -29,7 +29,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         .then((datasnapshot) {
       contact["username"] = datasnapshot.value["username"];
       contact["email"] =  datasnapshot.value["email"];
-      contact["phone"] = datasnapshot.value["phone"];
+      //contact["phone"] = datasnapshot.value["phone"];
 
       setState(() {});
     }).catchError((error) {
@@ -201,20 +201,20 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                 )),
                             dense: true,
                           ),
-                          contact["phone"] != null ? ListTile(
-                            leading: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Icon(Icons.phone),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-                            title: Text(contact["phone"],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[700],
-                                )),
-                            dense: true,
-                          ) : Text(""),
+                          // contact["phone"] != null ? ListTile(
+                          //   leading: Padding(
+                          //     padding: const EdgeInsets.only(left: 8.0),
+                          //     child: Icon(Icons.phone),
+                          //   ),
+                          //   contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+                          //   title: Text(contact["phone"],
+                          //       style: TextStyle(
+                          //         fontSize: 16,
+                          //         fontWeight: FontWeight.w500,
+                          //         color: Colors.grey[700],
+                          //       )),
+                          //   dense: true,
+                          // ) : Text(""),
                         ],
                       ),
                     ),
