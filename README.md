@@ -1,4 +1,4 @@
-Cougarbooks App!
+CougarBooks: Textbook marketplace platform for students at Quarry Lane High School. Compelete with search and filter systems, user chat capabilities, and block and report systems.
 <br>
 Some screenshots:
 <br>
